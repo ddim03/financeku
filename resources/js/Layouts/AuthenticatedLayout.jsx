@@ -5,19 +5,19 @@ import NavLink from "@/Components/NavLink";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink";
 import { Link } from "@inertiajs/react";
 
-export default function Authenticated({ user, header, children }) {
+export default function AuthenticatedLayout({ user, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
 
     return (
-        <div className="min-h-screen bg-gray-100">
-            <nav className="bg-white border-b border-gray-100">
+        <div className="bg-gray-100">
+            <nav className="bg-white border-b border-gray-100 fixed top-0 left-0 w-full">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between h-16">
                         <div className="flex">
                             <div className="shrink-0 flex items-center">
                                 <Link href="/">
-                                    <ApplicationLogo className="block h-9 w-auto fill-current text-gray-800" />
+                                    <ApplicationLogo />
                                 </Link>
                             </div>
 
@@ -28,6 +28,34 @@ export default function Authenticated({ user, header, children }) {
                                 >
                                     Dashboard
                                 </NavLink>
+                                {user.role === "manager" && (
+                                    <NavLink
+                                        href={route("teller.index")}
+                                        active={route().current("teller.*")}
+                                    >
+                                        Teller
+                                    </NavLink>
+                                )}
+                                {user.role !== "customer" && (
+                                    <>
+                                        <NavLink href={route("dashboard")}>
+                                            Customer
+                                        </NavLink>
+                                        <NavLink href={route("dashboard")}>
+                                            Transaction
+                                        </NavLink>
+                                    </>
+                                )}
+                                {user.role === "customer" && (
+                                    <>
+                                        <NavLink href={route("dashboard")}>
+                                            Transfer
+                                        </NavLink>
+                                        <NavLink href={route("dashboard")}>
+                                            Activity
+                                        </NavLink>
+                                    </>
+                                )}
                             </div>
                         </div>
 
@@ -132,6 +160,27 @@ export default function Authenticated({ user, header, children }) {
                         >
                             Dashboard
                         </ResponsiveNavLink>
+                        {user.role === "manager" && (
+                            <ResponsiveNavLink
+                                href={route("teller.index")}
+                                active={route().current("teller.*")}
+                            >
+                                Teller
+                            </ResponsiveNavLink>
+                        )}
+                        <ResponsiveNavLink href={route("dashboard")}>
+                            Customer
+                        </ResponsiveNavLink>
+                        {user.role !== "customer" && (
+                            <ResponsiveNavLink href={route("dashboard")}>
+                                Transaction
+                            </ResponsiveNavLink>
+                        )}
+                        {user.role === "customer" && (
+                            <ResponsiveNavLink href={route("dashboard")}>
+                                Activity
+                            </ResponsiveNavLink>
+                        )}
                     </div>
 
                     <div className="pt-4 pb-1 border-t border-gray-200">
@@ -160,15 +209,7 @@ export default function Authenticated({ user, header, children }) {
                 </div>
             </nav>
 
-            {header && (
-                <header className="bg-white shadow">
-                    <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {header}
-                    </div>
-                </header>
-            )}
-
-            <main>{children}</main>
+            <main className="mt-12">{children}</main>
         </div>
     );
 }
