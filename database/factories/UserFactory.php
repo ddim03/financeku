@@ -29,7 +29,6 @@ class UserFactory extends Factory
             'address' => fake()->address(),
             'password' => static::$password ??= Hash::make('password'),
             'role' => fake()->randomElement(['manager', 'teller', 'customer']),
-            'remember_token' => Str::random(10),
         ];
     }
 
