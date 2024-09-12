@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('account_id')->constrained('accounts')->onDelete('cascade');
             $table->enum('transaction_type', ['deposit', 'withdrawal', 'transfer']);
-            $table->decimal('current', 15, 2);
-            $table->decimal('debit', 15, 2);
-            $table->decimal('credit', 15, 2);
-            $table->decimal('finale', 15, 2);
+            $table->bigInteger('current');
+            $table->bigInteger('debit')->nullable();
+            $table->bigInteger('credit')->nullable();
+            $table->bigInteger('final')->nullable();
             $table->foreignId('target_account_id')->nullable()->constrained('accounts')->onDelete('cascade');
             $table->timestamp('transaction_date')->useCurrent();
             $table->timestamps();
