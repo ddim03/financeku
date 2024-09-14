@@ -24,4 +24,17 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::get('/customermanagement', function () {
+    return Inertia::render('Customer/customerManagement');
+})->middleware(['auth', 'verified'])->name('customerManagement');
+
+Route::get('/teller', function () {
+    return Inertia::render('Dashboard');
+})->middleware(['auth', 'verified'])->name('teller.index');
+
+// Perbaiki bagian editCustomer
+Route::get('/editCustomer', function () { // Ubah URL menjadi '/edit-customer'
+    return Inertia::render('Customer/EditCustomer'); // Ubah penamaan komponen menjadi 'Customer/EditCustomer'
+})->middleware(['auth', 'verified'])->name('customer.editCustomer'); // Ubah penamaan rute menjadi 'customer.edit'
+
 require __DIR__.'/auth.php';
