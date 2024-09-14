@@ -1,20 +1,18 @@
-export default function Badge({ status }) {
-    const statusName = {
-        1: "Active",
-        0: "Inactive",
-    };
-    const classByStatus = {
-        1: "bg-green-100 text-green-800 border-green-400",
-        0: "bg-red-100 text-red-800 border-red-400",
+export default function Badge({ value, variant }) {
+    const classVariant = {
+        info: " border-violet-100 bg-violet-50 text-violet-500",
+        success: " border-green-100 bg-green-50 text-green-500",
+        danger: " border-red-100 bg-red-50 text-red-500",
+        warning: " border-yellow-100 bg-yellow-50 text-yellow-500",
     };
     return (
         <span
             className={
-                "text-xs font-medium me-2 px-2.5 py-0.5 rounded border " +
-                classByStatus[status]
+                "text-xs font-medium px-2.5 py-0.5 rounded border " +
+                classVariant[variant]
             }
         >
-            {statusName[status]}
+            {value}
         </span>
     );
 }

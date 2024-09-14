@@ -87,11 +87,11 @@ export default function Index({ auth, tellers, queryParams = null }) {
         <AuthenticatedLayout user={auth.user}>
             <Head title="Teller Management" />
             <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 pt-12">
-                <div className="bg-white overflow-hidden shadow-sm sm:rounded pb-5">
-                    <Heading title="Teller Management">
+                <div className="bg-white overflow-hidden shadow-sm sm:rounded p-6">
+                    <Heading title="Teller Management" className="mb-6">
                         Manage teller accounts
                     </Heading>
-                    <div className="w-full px-6">
+                    <div className="w-full">
                         <div className="w-full flex flex-col lg:flex-row lg:justify-between gap-2">
                             <SearchInput
                                 className="w-full lg:w-2/5 !rounded"
@@ -119,7 +119,16 @@ export default function Index({ auth, tellers, queryParams = null }) {
                                         <Table.Td
                                             item={
                                                 <Badge
-                                                    status={item.is_active}
+                                                    value={
+                                                        item.is_active === 0
+                                                            ? "INACTIVE"
+                                                            : "ACTIVE"
+                                                    }
+                                                    variant={
+                                                        item.is_active === 0
+                                                            ? "danger"
+                                                            : "success"
+                                                    }
                                                 />
                                             }
                                         />
