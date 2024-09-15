@@ -1,9 +1,14 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\CustomerController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+
+Route::get('/test', function () {
+    return "test";
+});
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -24,17 +29,29 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('/customermanagement', function () {
-    return Inertia::render('Customer/customerManagement');
-})->middleware(['auth', 'verified'])->name('customerManagement');
+// Route::middleware('auth')->group(function () {
+//     Route::get('/customer-management', [CustomerController::class, 'index'])->name('Customer.customerManagement');
+// });
 
-Route::get('/teller', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('teller.index');
+Route::middleware(['auth', 'role:manager'])->group(function () {
+    Route::resource('customer', CustomerController::class);
+    Route::put('/customer/{customer}/block', [CustomerController::class, 'block'])
+        ->name('customer.block');
+});
+
+// Route::get('/customermanagement', function () {
+//     return Inertia::render('Customer/customerManagement');
+// });
 
 // Perbaiki bagian editCustomer
 Route::get('/editCustomer', function () { // Ubah URL menjadi '/edit-customer'
     return Inertia::render('Customer/EditCustomer'); // Ubah penamaan komponen menjadi 'Customer/EditCustomer'
 })->middleware(['auth', 'verified'])->name('customer.editCustomer'); // Ubah penamaan rute menjadi 'customer.edit'
+
+
+Route::get('/teller', function () {
+    return Inertia::render('Dashboard');
+})->middleware(['auth', 'verified'])->name('teller.index');
+
 
 require __DIR__.'/auth.php';
