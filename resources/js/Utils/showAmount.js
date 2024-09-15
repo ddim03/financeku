@@ -1,7 +1,12 @@
 import { currencyFormat } from "./currencyFormat";
 
 export const showAmount = (type, amount) => {
-    return type === "deposit"
-        ? "+" + currencyFormat(amount)
-        : "-" + currencyFormat(amount);
+    switch (type) {
+        case "deposit":
+            return "+" + currencyFormat(amount);
+        case "withdraw":
+            return "-" + currencyFormat(amount);
+        default:
+            return currencyFormat(amount);
+    }
 };
