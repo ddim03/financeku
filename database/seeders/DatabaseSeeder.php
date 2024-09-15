@@ -22,23 +22,24 @@ class DatabaseSeeder extends Seeder
         try {
             // setup data user
             User::factory()->create([
-                'name' => 'Test User',
-                'email' => 'test@example.com',
+                'name' => 'Dimas Gilang Dwi Aji',
+                'email' => 'dimas@gmail.com',
                 'role' => 'manager',
                 'password' => Hash::make('password')
             ]);
 
-            for ($i = 0; $i < 5; $i++) {
+            for ($i = 0; $i < 20; $i++) {
                 User::factory()->create([
                     'role' => 'teller',
                     'password' => Hash::make('password')
                 ]);
             }
 
-            for ($i = 0; $i < 50; $i++) {
+            for ($i = 0; $i < 200; $i++) {
                 User::factory()->create([
                     'role' => 'customer',
-                    'password' => Hash::make('password')
+                    'password' => Hash::make('password'),
+                    'is_active' => rand(0, 1)
                 ]);
             }
 
@@ -95,7 +96,7 @@ class DatabaseSeeder extends Seeder
                 $final = $account->balance - $debit;
                 Transaction::create([
                     'account_id' => $account->id,
-                    'transaction_type' => 'withdrawal',
+                    'transaction_type' => 'withdraw',
                     'current' => $balance,
                     'credit' => $debit,
                     'final' => $final
@@ -130,24 +131,24 @@ class DatabaseSeeder extends Seeder
             }
 
             $balance = $account->balance;
-            $debit = fake()->numberBetween(50000, 200000);
-            $final = $balance + $debit;
+            $credit = fake()->numberBetween(50000, 200000);
+            $final = $balance - $credit;
 
             try {
-                DB::transaction(function () use ($account, $targetAccount, $balance, $debit, $final) {
+                DB::transaction(function () use ($account, $targetAccount, $balance, $credit, $final) {
                     Transaction::create([
                         'account_id' => $account->id,
                         'target_account_id' => $targetAccount->id,  // Gunakan ID account dari contact
                         'transaction_type' => 'transfer',
                         'current' => $balance,
-                        'debit' => $debit,
+                        'credit' => $credit,
                         'final' => $final
                     ]);
 
                     $account->update(['balance' => $final]);
+                    $targetAccount->update(['balance' => $targetAccount->balance + $credit]);
                 });
             } catch (\Exception $e) {
-                // Log error dan lanjutkan ke user berikutnya
                 Log::error("Error creating transaction for user {$user->id}: " . $e->getMessage());
                 continue;
             }

@@ -2,20 +2,22 @@
 # FinanceKu
 
 FinanceKu is a simple financial management app that allows users to deposit cash, withdraw cash, transfer funds, and view transaction history.
+
 ## Features
 
-- User Management
-- Deposit
+- Teller Management
+- Customer Management
+- Deposit 
 - Withdrawal
 - Transfer between account
 - Transaction History
-
 
 ## Tech Stack
 
 - Laravel 11
 - ReactJS
 - TailwindCSS
+- Breeze
 
 
 ## Prerequisite
@@ -24,7 +26,7 @@ FinanceKu is a simple financial management app that allows users to deposit cash
 These are the minimum requirements that must be met before installing the application.
 - MySQL 8.x
 - PHP 8.2
-- Composer 2.7.x
+- Composer 2.7.6
 - NodeJS 20.x.x
 - NPM 10.x.x
 
@@ -60,24 +62,43 @@ Generate application key
 php artisan key:generate
 ```
 
-Create a symlink for static assets
+Create a symlink for static file
 ```bash
 php artisan storage:link
+```
+
+Migrate database and run the seeder
+```bash
+php artisan migrate --seed
 ```
 
 ## Environment Variables
 
 To run this project, you may need to adjust the following environment variables to your .env file
 
-`APP_NAME`
+`APP_NAME` : your application name
 
-`APP_TIMEZONE`
+`APP_TIMEZONE` : your local timezone (example: Asia/Jakarta)
 
-`APP_LOCALE`
+`APP_LOCALE` : your local (example: id)
 
-`APP_FAKER_LOCALE`
+`APP_FAKER_LOCALE` : your local (example: id_ID)
 
-`FILESYSTEM_DISK`
+`FILESYSTEM_DISK` : your default file system (example: public)
+
+If you want to use different database you can adjust this configuration
+
+`DB_CONNECTION` : your database type (example: mysql / pgsql)
+
+`DB_HOST` : your database host (example: 127.0.0.1 / localhost)
+
+`DB_PORT` : your database port (example: 3306 / 5432)
+
+`DB_DATABASE` : your database name
+
+`DB_USERNAME` : your database username
+
+`DB_PASSWORD` : your database password
 
 ## Run Locally
 
@@ -114,15 +135,13 @@ resources / js
 │   ├── currencyFormat.js
 │   └── ...
 └── Pages
-    ├── Manager
-    │   ├── Dashboard.jsx
-    │   └── Teller
-    │       ├── Index.jsx
-    │       └── ...
     ├── Teller
-    │   ├── Dashboard.jsx
+    │   ├── Partials
+    │   │   ├── FormModal.jsx
+    │   │   └── ...
+    │   ├── Index.jsx
     │   └── ...
     └── Customer
-        ├── Dashboard.jsx
+        ├── Index.jsx
         └── ...
 ```

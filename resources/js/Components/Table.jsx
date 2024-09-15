@@ -2,7 +2,7 @@ const Table = ({ header, children }) => {
     return (
         <div className="relative overflow-x-auto sm:rounded">
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 border">
-                <thead className="text-xs text-gray-700 uppercase bg-gray-300 ">
+                <thead className="text-xs text-gray-700 uppercase bg-gray-200 ">
                     <tr>
                         {header.map((item, index) => (
                             <th
