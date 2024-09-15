@@ -10,9 +10,15 @@ use Illuminate\Support\Facades\Route;
 Route::redirect('/', '/dashboard');
 
 Route::middleware(['auth', 'role:manager'])->group(function () {
+    // Teller
     Route::resource('teller', TellerController::class);
     Route::put('/teller/{teller}/block', [TellerController::class, 'block'])
         ->name('teller.block');
+
+    // Customer
+    Route::resource('customer', CustomerController::class);
+    Route::put('/customer/{customer}/block', [CustomerController::class, 'block'])
+        ->name('customer.block');
 });
 
 Route::middleware('auth')->group(function () {
@@ -20,16 +26,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
-
-// Route::middleware('auth')->group(function () {
-//     Route::get('/customer-management', [CustomerController::class, 'index'])->name('Customer.customerManagement');
-// });
-
-Route::middleware(['auth', 'role:manager'])->group(function () {
-    Route::resource('customer', CustomerController::class);
-    Route::put('/customer/{customer}/block', [CustomerController::class, 'block'])
-        ->name('customer.block');
 });
 
 require __DIR__.'/auth.php';
