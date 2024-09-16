@@ -2,8 +2,8 @@ import React from "react";
 
 export default function Heading({ title, children, className, level = "h1" }) {
     const classLevel = {
-        h1: "text-2xl font-bold mb-1",
-        h2: "text-lg font-bold mb-1",
+        h1: "text-xl font-bold mb-1",
+        h2: "text-lg font-semibold mb-1",
         h3: "text-base font-bold mb-1",
         h4: "text-sm font-bold mb-1",
         h5: "text-xs font-bold mb-1",

@@ -51,6 +51,14 @@ export default function AuthenticatedLayout({ user, children }) {
                                         <NavLink href={route("dashboard")}>
                                             Transfer
                                         </NavLink>
+                                        <NavLink
+                                            href={route("contact.index")}
+                                            active={route().current(
+                                                "contact.*"
+                                            )}
+                                        >
+                                            Contact
+                                        </NavLink>
                                         <NavLink href={route("dashboard")}>
                                             Activity
                                         </NavLink>

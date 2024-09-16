@@ -6,6 +6,6 @@ export default async function useFetch(endpoint) {
         let response = await axios.get(BASE_URL + endpoint);
         return response.data;
     } catch (error) {
-        return error;
+        return error.data.message;
     }
 }
