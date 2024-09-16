@@ -44,7 +44,7 @@ export default function Index({ auth, statistics, transactions }) {
                                 icon={faArrowTrendUp}
                             />
                             <Stat
-                                title="Expences"
+                                title="Expenses"
                                 value={currencyFormat(statistics.expense)}
                                 variant={"danger"}
                                 icon={faArrowTrendDown}

@@ -91,96 +91,91 @@ export default function Index({ auth, tellers, queryParams = null }) {
                     <Heading title="Teller Management" className="mb-6">
                         Manage teller accounts
                     </Heading>
-                    <div className="w-full">
-                        <div className="w-full flex flex-col lg:flex-row lg:justify-between gap-2">
-                            <SearchInput
-                                className="w-full lg:w-2/5 !rounded"
-                                onChange={handleSearchChange}
-                                value={searchParams}
-                                isLoading={isLoading}
-                                placeholder="Cari..."
-                            />
-                            <PrimaryButton
-                                className="justify-center py-3 lg:py-0"
-                                onClick={handleAddNewTeller}
-                                disabled={showModal}
-                            >
-                                Add New Teller
-                            </PrimaryButton>
-                        </div>
-                        <div className="mt-4">
-                            <Table header={header}>
-                                {tellers.data.map((item, index) => (
-                                    <Table.Tr key={index}>
-                                        <Table.Td item={index + 1} />
-                                        <Table.Td item={item.name} />
-                                        <Table.Td item={item.email} />
-                                        <Table.Td item={item.address} />
-                                        <Table.Td
-                                            item={
-                                                <Badge
-                                                    value={
-                                                        item.is_active === 0
-                                                            ? "INACTIVE"
-                                                            : "ACTIVE"
-                                                    }
-                                                    variant={
-                                                        item.is_active === 0
-                                                            ? "danger"
-                                                            : "success"
-                                                    }
-                                                />
+                    <div className="w-full flex flex-col lg:flex-row lg:justify-between gap-2">
+                        <SearchInput
+                            className="w-full lg:w-2/5 !rounded"
+                            onChange={handleSearchChange}
+                            value={searchParams}
+                            isLoading={isLoading}
+                            placeholder="Cari..."
+                        />
+                        <PrimaryButton
+                            className="justify-center py-3 lg:py-0"
+                            onClick={handleAddNewTeller}
+                            disabled={showModal}
+                        >
+                            Add New Teller
+                        </PrimaryButton>
+                    </div>
+                    <div className="mt-4">
+                        <Table header={header}>
+                            {tellers.data.map((item, index) => (
+                                <Table.Tr key={index}>
+                                    <Table.Td item={index + 1} />
+                                    <Table.Td item={item.name} />
+                                    <Table.Td item={item.email} />
+                                    <Table.Td item={item.address} />
+                                    <Table.Td
+                                        item={
+                                            <Badge
+                                                value={
+                                                    item.is_active === 0
+                                                        ? "INACTIVE"
+                                                        : "ACTIVE"
+                                                }
+                                                variant={
+                                                    item.is_active === 0
+                                                        ? "danger"
+                                                        : "success"
+                                                }
+                                            />
+                                        }
+                                    />
+                                    <Table.TdAction>
+                                        <SecondaryButton
+                                            onClick={() =>
+                                                handleBlockTeller(item)
                                             }
-                                        />
-                                        <Table.TdAction>
-                                            <SecondaryButton
-                                                onClick={() =>
-                                                    handleBlockTeller(item)
-                                                }
-                                            >
-                                                {item.is_active === 0 ? (
-                                                    <FontAwesomeIcon
-                                                        icon={faCircleCheck}
-                                                        className="text-green-500"
-                                                    />
-                                                ) : (
-                                                    <FontAwesomeIcon
-                                                        icon={faBan}
-                                                        className="text-red-500"
-                                                    />
-                                                )}
-                                            </SecondaryButton>
-                                            <SecondaryButton
-                                                onClick={() =>
-                                                    handleEditTeller(item)
-                                                }
-                                            >
+                                        >
+                                            {item.is_active === 0 ? (
                                                 <FontAwesomeIcon
-                                                    icon={faEdit}
-                                                    className="text-yellow-500"
+                                                    icon={faCircleCheck}
+                                                    className="text-green-500"
                                                 />
-                                            </SecondaryButton>
-                                            <SecondaryButton
-                                                onClick={() =>
-                                                    handleDeleteTeller(item)
-                                                }
-                                            >
+                                            ) : (
                                                 <FontAwesomeIcon
-                                                    icon={faTrash}
-                                                    className="text-red-600"
+                                                    icon={faBan}
+                                                    className="text-red-500"
                                                 />
-                                            </SecondaryButton>
-                                        </Table.TdAction>
-                                    </Table.Tr>
-                                ))}
-                            </Table>
-                            {tellers.data.length > 0 && (
-                                <Pagination
-                                    meta={tellers.meta}
-                                    noScroll={true}
-                                />
-                            )}
-                        </div>
+                                            )}
+                                        </SecondaryButton>
+                                        <SecondaryButton
+                                            onClick={() =>
+                                                handleEditTeller(item)
+                                            }
+                                        >
+                                            <FontAwesomeIcon
+                                                icon={faEdit}
+                                                className="text-yellow-500"
+                                            />
+                                        </SecondaryButton>
+                                        <SecondaryButton
+                                            onClick={() =>
+                                                handleDeleteTeller(item)
+                                            }
+                                        >
+                                            <FontAwesomeIcon
+                                                icon={faTrash}
+                                                className="text-red-600"
+                                            />
+                                        </SecondaryButton>
+                                    </Table.TdAction>
+                                </Table.Tr>
+                            ))}
+                        </Table>
+                        {tellers.data.length > 0 && (
+                            <Pagination meta={tellers.meta} noScroll={true} />
+                        )}
                     </div>
                 </div>
             </div>
