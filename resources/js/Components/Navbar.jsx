@@ -20,6 +20,7 @@ export function Navbar(props) {
                 <span className="cursor-pointer">Teller</span>
                 <span className="cursor-pointer">Customer</span>
                 <span className="cursor-pointer">Transaction</span>
+                <span className="cursor-pointer">History Transaction</span>
             </nav>
         </div>
     );

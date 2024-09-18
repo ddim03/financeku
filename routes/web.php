@@ -3,6 +3,7 @@
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\HistoryController;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\TellerController;
 use Illuminate\Support\Facades\Route;
@@ -19,6 +20,9 @@ Route::middleware(['auth', 'role:manager'])->group(function () {
     Route::resource('customer', CustomerController::class);
     Route::put('/customer/{customer}/block', [CustomerController::class, 'block'])
         ->name('customer.block');
+    
+    // Riwayat Transaksi
+    Route::get('/history-transaksi', [HistoryController::class, 'index'])->name('history.transactions');
 });
 
 Route::middleware('auth')->group(function () {
