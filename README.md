@@ -1,7 +1,8 @@
 
 # FinanceKu
-
 FinanceKu is a simple financial management app that allows users to deposit cash, withdraw cash, transfer funds, and view transaction history.
+
+![Financeku](./docs/images/dashboard.png)
 
 ## Features
 
@@ -18,6 +19,7 @@ FinanceKu is a simple financial management app that allows users to deposit cash
 - ReactJS
 - TailwindCSS
 - Breeze
+- Fontawesome Icon
 
 
 ## Prerequisite

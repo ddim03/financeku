@@ -5,8 +5,8 @@ export const selectVariant = (value) => {
         case "withdraw":
             return "danger";
         case "transfer in":
-            return "accent";
-        case "transfer out":
             return "info";
+        case "transfer out":
+            return "warning";
     }
 };
