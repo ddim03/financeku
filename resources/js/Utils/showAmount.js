@@ -6,7 +6,9 @@ export const showAmount = (type, amount) => {
             return "+" + currencyFormat(amount);
         case "withdraw":
             return "-" + currencyFormat(amount);
-        default:
-            return currencyFormat(amount);
+        case "transfer in":
+            return "+" + currencyFormat(amount);
+        case "transfer out":
+            return "-" + currencyFormat(amount);
     }
 };

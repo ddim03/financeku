@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('account_id')->constrained('accounts')->onDelete('cascade');
-            $table->enum('transaction_type', ['deposit', 'withdraw', 'transfer']);
+            $table->enum('transaction_type', ['deposit', 'withdraw', 'transfer in', 'transfer out']);
             $table->bigInteger('current');
             $table->bigInteger('debit')->nullable();
             $table->bigInteger('credit')->nullable();

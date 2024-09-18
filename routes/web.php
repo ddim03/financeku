@@ -4,6 +4,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TellerController;
+use App\Http\Controllers\TransferController;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/dashboard');
@@ -16,6 +17,8 @@ Route::middleware(['auth', 'role:manager'])->group(function () {
 
 Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::resource('contact', ContactController::class);
+    Route::get('/transfer', [TransferController::class, 'index'])->name('transfer.index');
+    Route::post('/transfer', [TransferController::class, 'store'])->name('transfer.store');
 });
 
 Route::resource('contact', ContactController::class);

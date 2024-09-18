@@ -19,6 +19,7 @@ class DashboardController extends Controller
         if ($user->role === 'customer') {
             $account = $user->account;
             $currentMonth = Carbon::now()->format('m');
+
             $statistics = [
                 'balance' => $account->balance,
                 'income' => $account->transactions()->whereMonth('transaction_date', $currentMonth)->sum('debit'),

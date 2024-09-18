@@ -113,19 +113,34 @@ class DatabaseSeeder extends Seeder
             }
 
             $balance = $account->balance;
-            $credit = fake()->numberBetween(50000, 200000);
-            $final = $balance - $credit;
+            $amount = fake()->numberBetween(50000, 200000);
+            $final = $balance - $amount;
+
+            $targetBalance = $targetAccount->balance;
+            $targetFinal = $targetBalance + $amount;
+
+            // out
             Transaction::create([
                 'account_id' => $account->id,
                 'target_account_id' => $targetAccount->id,
-                'transaction_type' => 'transfer',
+                'transaction_type' => 'transfer out',
                 'current' => $balance,
-                'credit' => $credit,
+                'credit' => $amount,
                 'final' => $final
             ]);
 
+            // in
+            Transaction::create([
+                'account_id' => $targetAccount->id,
+                'target_account_id' => $account->id,
+                'transaction_type' => 'transfer in',
+                'current' => $targetBalance,
+                'debit' => $amount,
+                'final' => $targetFinal
+            ]);
+
             $account->update(['balance' => $final]);
-            $targetAccount->update(['balance' => $targetAccount->balance + $credit]);
+            $targetAccount->update(['balance' => $targetFinal]);
         }
     }
 }

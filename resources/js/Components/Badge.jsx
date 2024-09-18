@@ -4,6 +4,7 @@ export default function Badge({ value, variant }) {
         success: " border-green-100 bg-green-50 text-green-500",
         danger: " border-red-100 bg-red-50 text-red-500",
         warning: " border-yellow-100 bg-yellow-50 text-yellow-500",
+        accent: " border-emerald-100 bg-emerald-50 text-emerald-500",
     };
     return (
         <span
