@@ -17,6 +17,7 @@ class ContactController extends Controller
     public function index()
     {
         $query = Contact::query();
+        $query->where('user_id', Auth::user()->id);
         $keyword = request('q');
 
         if ($keyword) {
@@ -28,7 +29,6 @@ class ContactController extends Controller
         }
 
         $contacts = $query
-            ->where('user_id', Auth::user()->id)
             ->orderBy('created_at', 'desc')
             ->paginate(10)
             ->onEachSide(1);

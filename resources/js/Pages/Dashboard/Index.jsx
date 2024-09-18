@@ -62,7 +62,8 @@ export default function Index({ auth, statistics, transactions }) {
                             <Table header={header}>
                                 {transactions.data.map((item, index) => {
                                     let amount =
-                                        item.type === "deposit"
+                                        item.type === "deposit" ||
+                                        item.type === "transfer in"
                                             ? item.debit
                                             : item.credit;
 
