@@ -6,6 +6,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\HistoryController;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\TellerController;
+use App\Http\Controllers\WithdrawalController;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/dashboard');
@@ -24,6 +25,10 @@ Route::middleware(['auth', 'role:manager'])->group(function () {
     // Riwayat Transaksi
     Route::get('/history-transaksi', [HistoryController::class, 'index'])->name('history.transactions');
 });
+
+// withdrawal
+Route::resource('withdrawal', WithdrawalController::class)->middleware('auth', 'checkRole:manager,teller');
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
