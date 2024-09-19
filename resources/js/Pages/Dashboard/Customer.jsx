@@ -36,18 +36,21 @@ export default function Index({ auth, statistics, transactions }) {
                                 value={currencyFormat(statistics.balance)}
                                 variant={"info"}
                                 icon={faWallet}
+                                description="This Account"
                             />
                             <Stat
                                 title="Income"
                                 value={currencyFormat(statistics.income)}
                                 variant={"success"}
                                 icon={faArrowTrendUp}
+                                description="This Month"
                             />
                             <Stat
-                                title="Expences"
+                                title="Expenses"
                                 value={currencyFormat(statistics.expense)}
                                 variant={"danger"}
                                 icon={faArrowTrendDown}
+                                description="This Month"
                             />
                         </div>
                         <div className="mt-8">
@@ -56,13 +59,13 @@ export default function Index({ auth, statistics, transactions }) {
                                 className="mb-6"
                                 level="h2"
                             >
-                                All your customer recent transactions in one
-                                place
+                                All your recent transactions in one place
                             </Heading>
                             <Table header={header}>
                                 {transactions.data.map((item, index) => {
                                     let amount =
-                                        item.type === "deposit"
+                                        item.type === "deposit" ||
+                                        item.type === "transfer in"
                                             ? item.debit
                                             : item.credit;
 

@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\TransferController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CustomerController;
@@ -14,7 +16,7 @@ Route::redirect('/', '/dashboard');
 Route::middleware(['auth', 'role:manager'])->group(function () {
     // Teller
     Route::resource('teller', TellerController::class);
-    Route::put('/teller/{teller}/block', [TellerController::class, 'block'])
+    Route::put('teller/{teller}/block', [TellerController::class, 'block'])
         ->name('teller.block');
 
     // Customer
@@ -28,6 +30,15 @@ Route::middleware(['auth', 'role:manager'])->group(function () {
 
 // withdrawal
 Route::resource('withdrawal', WithdrawalController::class)->middleware('auth', 'checkRole:manager,teller');
+
+
+Route::middleware(['auth', 'role:customer'])->group(function () {
+    Route::resource('contact', ContactController::class);
+    Route::get('/transfer', [TransferController::class, 'index'])->name('transfer.index');
+    Route::post('/transfer', [TransferController::class, 'store'])->name('transfer.store');
+});
+
+Route::resource('contact', ContactController::class);
 
 
 Route::middleware('auth')->group(function () {

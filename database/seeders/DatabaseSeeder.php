@@ -7,9 +7,7 @@ use App\Models\Account;
 use App\Models\Contact;
 use App\Models\Transaction;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
 
 class DatabaseSeeder extends Seeder
 {
@@ -18,140 +16,131 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::beginTransaction();
-        try {
-            // setup data user
+        // setup data user
+        User::factory()->create([
+            'name' => 'Dimas Gilang Dwi Aji',
+            'email' => 'dimas@gmail.com',
+            'role' => 'manager',
+            'password' => Hash::make('password')
+        ]);
+
+        for ($i = 0; $i < 20; $i++) {
             User::factory()->create([
-                'name' => 'Dimas Gilang Dwi Aji',
-                'email' => 'dimas@gmail.com',
-                'role' => 'manager',
+                'role' => 'teller',
                 'password' => Hash::make('password')
             ]);
+        }
 
-            for ($i = 0; $i < 20; $i++) {
-                User::factory()->create([
-                    'role' => 'teller',
-                    'password' => Hash::make('password')
+        for ($i = 0; $i < 200; $i++) {
+            User::factory()->create([
+                'role' => 'customer',
+                'password' => Hash::make('password'),
+                'is_active' => rand(0, 1)
+            ]);
+        }
+
+        // setup data account
+        $users = User::all();
+        foreach ($users as $user) {
+            if ($user->role == 'customer') {
+                Account::create([
+                    'user_id' => $user->id,
+                    'account_number' => fake()->randomNumber(9, true),
+                    'balance' => 0
                 ]);
             }
+        }
 
-            for ($i = 0; $i < 200; $i++) {
-                User::factory()->create([
-                    'role' => 'customer',
-                    'password' => Hash::make('password'),
-                    'is_active' => rand(0, 1)
-                ]);
-            }
-
-            // setup data account
-            $users = User::all();
-            foreach ($users as $user) {
-                if ($user->role == 'customer') {
-                    Account::create([
+        // setup data contact
+        foreach ($users as $user) {
+            if ($user->role == 'customer') {
+                $userAccounts = Account::inRandomOrder()->limit(12)->get();
+                foreach ($userAccounts as $account) {
+                    Contact::create([
                         'user_id' => $user->id,
-                        'account_number' => fake()->randomNumber(9, true),
-                        'balance' => fake()->numberBetween(50000, 1000000)
+                        'account_id' => $account->id,
+                        'alias' => fake()->firstName()
                     ]);
                 }
             }
-
-            // setup data contact
-            foreach ($users as $user) {
-                $account = Account::inRandomOrder()->first();
-                Contact::create([
-                    'user_id' => $user->id,
-                    'account_id' => $account->id,
-                    'alias' => $account->user->name
-                ]);
-            }
-            DB::commit();
-        } catch (\Throwable $th) {
-            Log::error("Error creating user: " . $th->getMessage());
-            DB::rollBack();
         }
 
-        DB::beginTransaction();
-        try {
-            // setup data transaction (setor)
-            $accounts = Account::all();
-            foreach ($accounts as $account) {
-                $balance = $account->balance;
-                $debit  = fake()->numberBetween(2000000, 5000000);
-                $final = $account->balance + $debit;
-                Transaction::create([
-                    'account_id' => $account->id,
-                    'transaction_type' => 'deposit',
-                    'current' => $balance,
-                    'debit' => $debit,
-                    'final' => $final
-                ]);
-                Account::where('id', $account->id)->update(['balance' => $final]);
-            }
+        $accounts = Account::all();
 
-            // setup data transaction (tarik)
-            $accounts = Account::all();
-            foreach ($accounts as $account) {
-                $balance = $account->balance;
-                $debit  = fake()->numberBetween(50000, 200000);
-                $final = $account->balance - $debit;
-                Transaction::create([
-                    'account_id' => $account->id,
-                    'transaction_type' => 'withdraw',
-                    'current' => $balance,
-                    'credit' => $debit,
-                    'final' => $final
-                ]);
-                Account::where('id', $account->id)->update(['balance' => $final]);
-            }
-            DB::commit();
-        } catch (\Throwable $th) {
-            Log::error("Error creating user: " . $th->getMessage());
-            DB::rollBack();
+        foreach ($accounts as $account) {
+            $balance = $account->balance;
+            $debit  = fake()->numberBetween(2000000, 5000000);
+            $final = $balance + $debit;
+            Transaction::create([
+                'account_id' => $account->id,
+                'transaction_type' => 'deposit',
+                'current' => $balance,
+                'debit' => $debit,
+                'final' => $final
+            ]);
+            $account->update(['balance' => $final]);
         }
 
-        // setup data transaction (transfer)
+        foreach ($accounts as $account) {
+            $balance = $account->balance;
+            $credit  = fake()->numberBetween(50000, 200000);
+            $final = $balance - $credit;
+            Transaction::create([
+                'account_id' => $account->id,
+                'transaction_type' => 'withdraw',
+                'current' => $balance,
+                'credit' => $credit,
+                'final' => $final
+            ]);
+            $account->update(['balance' => $final]);
+        }
+
+        // Transfer process...
         foreach ($users as $user) {
             $account = $user->account;
-            if ($account === null) {
-                // Skip this user if they don't have an account
+            if ($account == null) {
                 continue;
             }
 
             $contact = $user->contacts()->first();
-            if ($contact === null) {
-                // Skip this user if they don't have any contacts
+            if ($contact == null) {
                 continue;
             }
 
-            // Pastikan contact memiliki account yang valid
             $targetAccount = $contact->account;
-            if ($targetAccount === null) {
-                // Skip jika contact tidak memiliki account yang valid
+            if ($targetAccount == null) {
                 continue;
             }
 
             $balance = $account->balance;
-            $credit = fake()->numberBetween(50000, 200000);
-            $final = $balance - $credit;
+            $amount = fake()->numberBetween(50000, 200000);
+            $final = $balance - $amount;
 
-            try {
-                DB::transaction(function () use ($account, $targetAccount, $balance, $credit, $final) {
-                    Transaction::create([
-                        'account_id' => $account->id,
-                        'target_account_id' => $targetAccount->id,  // Gunakan ID account dari contact
-                        'transaction_type' => 'transfer',
-                        'current' => $balance,
-                        'credit' => $credit,
-                        'final' => $final
-                    ]);
+            $targetBalance = $targetAccount->balance;
+            $targetFinal = $targetBalance + $amount;
 
-                    $account->update(['balance' => $final]);
-                    $targetAccount->update(['balance' => $targetAccount->balance + $credit]);
-                });
-            } catch (\Exception $e) {
-                Log::error("Error creating transaction for user {$user->id}: " . $e->getMessage());
-                continue;
-            }
+            // out
+            Transaction::create([
+                'account_id' => $account->id,
+                'target_account_id' => $targetAccount->id,
+                'transaction_type' => 'transfer out',
+                'current' => $balance,
+                'credit' => $amount,
+                'final' => $final
+            ]);
+
+            // in
+            Transaction::create([
+                'account_id' => $targetAccount->id,
+                'target_account_id' => $account->id,
+                'transaction_type' => 'transfer in',
+                'current' => $targetBalance,
+                'debit' => $amount,
+                'final' => $targetFinal
+            ]);
+
+            $account->update(['balance' => $final]);
+            $targetAccount->update(['balance' => $targetFinal]);
         }
     }
 }

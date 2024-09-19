@@ -25,10 +25,12 @@ const Tr = ({ children }) => (
     <tr className="even:bg-gray-100 odd:bg-white">{children}</tr>
 );
 
-const Td = ({ item }) => <td className="px-6 py-4">{item}</td>;
+const Td = ({ item, className }) => (
+    <td className={"px-6 py-4 " + className}>{item}</td>
+);
 
 const TdAction = ({ children }) => (
-    <td className="px-6 py-4 text-nowrap flex flex-col lg:flex-row gap-2">
+    <td className="px-6 py-4 text-nowrap flex flex-col lg:flex-row gap-2 justify-center">
         {children}
     </td>
 );

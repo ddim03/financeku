@@ -2,10 +2,11 @@
 
 namespace App\Http\Resources;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class AccountResource extends JsonResource
+class ContactResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,9 +17,10 @@ class AccountResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'account_number' => $this->account_number,
-            'balance' => $this->balance,
-            'user' => new UserResource($this->user),
+            'user' => new UserResource($this->account->user),
+            'account' => new AccountResource($this->account),
+            'alias' => $this->alias,
+            'created_at' => Carbon::parse($this->created_at)->format('Y-m-d H:i:s'),
         ];
     }
 }
