@@ -25,10 +25,6 @@ Route::middleware(['auth', 'role:manager'])->group(function () {
         ->name('customer.block');
 });
 
-// withdrawal
-Route::get('/withdrawal', [WithdrawalController::class, 'index'])->name('history.transactions');
-
-
 Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::resource('contact', ContactController::class);
     Route::get('/transfer', [TransferController::class, 'index'])->name('transfer.index');
@@ -36,6 +32,9 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
 
     // Riwayat Transaksi
     Route::get('/history-transaksi', [HistoryController::class, 'index'])->name('history.transactions');
+
+    // withdrawal
+    Route::get('/withdrawal', [WithdrawalController::class, 'index'])->name('withdrawal.index');
 });
 
 Route::resource('contact', ContactController::class);

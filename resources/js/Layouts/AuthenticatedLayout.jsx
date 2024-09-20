@@ -190,7 +190,7 @@ export default function AuthenticatedLayout({ user, children }) {
                             </ResponsiveNavLink>
                         )}
                         {user.role === "customer" && (
-                            <ResponsiveNavLink href={route("dashboard")}>
+                            <ResponsiveNavLink href={route("history.transactions")}>
                                 Activity
                             </ResponsiveNavLink>
                         )}

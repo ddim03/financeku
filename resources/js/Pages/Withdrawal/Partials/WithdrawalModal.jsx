@@ -53,30 +53,12 @@ export default function WithdrawalModal({
         <Modal show={show} onClose={() => setShowModal(false)} maxWidth="lg">
             <div className="p-6">
                 <h2 className="text-lg font-medium text-gray-900">
-                    Transfer Your Money
+                    Customer Withdrawal
                 </h2>
                 <hr className="my-3 text-gray-700" />
                 <form onSubmit={handleSubmit}>
                     <div className="mt-4">
-                        <InputLabel value="Your Account" className="mb-2" />
-                        <DisplayAccount
-                            account_number={userAccount.account_number}
-                            name={userAccount.user.name}
-                            isLoading={false}
-                            balance={userAccount.balance}
-                            withBalance={true}
-                        />
-                    </div>
-                    <div className="mt-4">
-                        <InputLabel value="Destination" className="mb-2" />
-                        <DisplayAccount
-                            account_number={contact?.account.account_number}
-                            name={contact?.alias}
-                            isLoading={false}
-                        />
-                    </div>
-                    <div className="mt-4">
-                        <InputLabel value="Amount" className="mb-2" />
+                        <InputLabel value="Account Number" className="mb-2" />
                         <TextInput
                             name="amount"
                             type="number"
@@ -86,16 +68,24 @@ export default function WithdrawalModal({
                         <InputError message={errors?.amount} className="mt-2" />
                     </div>
                     <div className="mt-4">
-                        <InputLabel value="Message" className="mb-2" />
-                        <TextAreaInput
-                            name="message"
+                        <InputLabel value="Account" className="mb-2" />
+                        <DisplayAccount
+                            account_number={userAccount.account_number}
+                            name={userAccount.user.name}
+                            isLoading={false}
+                            balance={userAccount.balance}
+                            withBalance={true}
+                        />
+                    </div>
+                    <div className="mt-4">
+                        <InputLabel value="Nominal" className="mb-2" />
+                        <TextInput
+                            name="amount"
+                            type="number"
                             className="w-full"
-                            onChange={(e) => setData("message", e.target.value)}
+                            onChange={(e) => setData("amount", e.target.value)}
                         />
-                        <InputError
-                            message={errors?.message}
-                            className="mt-2"
-                        />
+                        <InputError message={errors?.amount} className="mt-2" />
                     </div>
                     <div className="w-full flex gap-2 justify-end mt-4">
                         <SecondaryButton onClick={() => setShowModal(false)}>
