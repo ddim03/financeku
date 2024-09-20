@@ -1,4 +1,4 @@
-export default function Badge({ value, variant }) {
+export default function Badge({ value, variant, onClick }) {
     const classVariant = {
         info: " border-violet-100 bg-violet-50 text-violet-500",
         success: " border-green-100 bg-green-50 text-green-500",
@@ -8,8 +8,9 @@ export default function Badge({ value, variant }) {
     };
     return (
         <span
+            onClick={onClick}
             className={
-                "text-xs font-medium px-2.5 py-0.5 rounded border " +
+                "text-xs font-medium px-2.5 py-0.5 rounded border cursor-pointer " +
                 classVariant[variant]
             }
         >
@@ -17,3 +18,4 @@ export default function Badge({ value, variant }) {
         </span>
     );
 }
+

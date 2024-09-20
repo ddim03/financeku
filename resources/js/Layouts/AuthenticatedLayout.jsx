@@ -38,7 +38,7 @@ export default function AuthenticatedLayout({ user, children }) {
                                 )}
                                 {user.role !== "customer" && (
                                     <>
-                                        <NavLink href={route("dashboard")}>
+                                        <NavLink href={route("customer.index")}>
                                             Customer
                                         </NavLink>
                                         <NavLink href={route("dashboard")}>
@@ -64,7 +64,7 @@ export default function AuthenticatedLayout({ user, children }) {
                                         >
                                             Contact
                                         </NavLink>
-                                        <NavLink href={route("dashboard")}>
+                                        <NavLink href={route("history.transactions")}>
                                             Activity
                                         </NavLink>
                                     </>

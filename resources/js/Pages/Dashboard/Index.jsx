@@ -15,6 +15,7 @@ import { Head } from "@inertiajs/react";
 
 export default function Index({ auth, statistics, transactions }) {
     const header = ["no", "date", "name", "account number", "type", "amount"];
+    console.log(transactions);
 
     return (
         <AuthenticatedLayout user={auth.user}>
