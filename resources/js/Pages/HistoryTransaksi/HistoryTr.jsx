@@ -18,9 +18,11 @@ export default function HistoryTr({ auth, transactions, queryParams = null }) {
     const [searchParams, setSearchParams] = useState(queryParams.q || "");
     const debouncedSearchParams = useDebounce(searchParams, 800);
     const isFirstRender = useRef(true);
+    const [filter, setFilter] = useState("");
 
     // Function to handle filter change
     const handleFilterChange = (type) => {
+        setFilter(type);
         router.get(route('history.transactions'), { filter: type }, {
             preserveState: true,
             preserveScroll: true,
@@ -28,7 +30,7 @@ export default function HistoryTr({ auth, transactions, queryParams = null }) {
     };
 
     // Function to filter transactions based on search input
-    const filteredTransactions = transactions.data.filter(item => 
+    const filteredTransactions = transactions.data.filter(item =>
         item.user.name.toLowerCase().includes(debouncedSearchParams.toLowerCase())
     );
 
@@ -75,40 +77,29 @@ export default function HistoryTr({ auth, transactions, queryParams = null }) {
                         </Heading>
 
                         <div className="mt-8">
-                            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-2 ">
+                            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-2">
                                 {/* Search Input */}
-                                <div className="flex-1 w-full lg:w-1/3">
-                                    <SearchInput
-                                        className="w-full !rounded"
-                                        onChange={handleSearchChange}
-                                        value={searchParams}
-                                        isLoading={isLoading}
-                                        placeholder="Cari..."
-                                    />
-                                </div>
+                                <SearchInput
+                                    className="w-full lg:w-2/5 !rounded"
+                                    onChange={handleSearchChange}
+                                    value={searchParams}
+                                    isLoading={isLoading}
+                                    placeholder="Cari..."
+                                />
 
-                                {/* Filter Badges */}
+                                {/* Filter Dropdown */}
                                 <div className="flex space-x-2 lg:space-x-4">
-                                    <Badge
-                                        value="Deposit"
-                                        variant="success"
-                                        onClick={() => handleFilterChange('deposit')}
-                                    />
-                                    <Badge
-                                        value="Withdrawal"
-                                        variant="danger"
-                                        onClick={() => handleFilterChange('withdrawal')}
-                                    />
-                                    <Badge
-                                        value="Transfer"
-                                        variant="info"
-                                        onClick={() => handleFilterChange('transfer')}
-                                    />
-                                    <Badge
-                                        value="All"
-                                        variant="warning"
-                                        onClick={() => handleFilterChange(null)}
-                                    />
+                                    <select
+                                        className="border rounded p-2"
+                                        value={filter}
+                                        onChange={(e) => handleFilterChange(e.target.value)}
+                                    >
+                                        <option value="">All Transactions</option>
+                                        <option value="deposit">Deposit</option>
+                                        <option value="withdraw">Withdraw</option>
+                                        <option value="transfer out">Transfer Out</option>
+                                        <option value="transfer in">Transfer In</option>
+                                    </select>
                                 </div>
                             </div>
 
@@ -137,7 +128,7 @@ export default function HistoryTr({ auth, transactions, queryParams = null }) {
                                             <Table.Td item={item.user.name} />
                                             <Table.Td item={accountNumber} />
                                             <Table.Td
-                                                item={ 
+                                                item={
                                                     <Badge
                                                         value={item.type.toUpperCase()}
                                                         variant={variant}

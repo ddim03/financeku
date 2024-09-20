@@ -43,7 +43,7 @@ export default function customerManagement({ auth, customers, queryParams = null
         if (debouncedSearchParams !== queryParams.q) {
             setIsLoading(true);
             router.get(
-                route("customer/customerManagement"),
+                route("customer.index"),
                 { q: debouncedSearchParams },
                 {
                     preserveState: true,

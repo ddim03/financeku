@@ -4,29 +4,28 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import SearchInput from "@/Components/SearchInput";
 import SecondaryButton from "@/Components/SecondaryButton";
 import Table from "@/Components/Table";
+import { useDebounce } from "@/Hooks/useDebounce";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Head, router } from "@inertiajs/react";
 import { useEffect, useRef, useState } from "react";
-import { useDebounce } from "@/Hooks/useDebounce";
-import AddContactFormModal from "./Partials/AddContactModal";
-import EditContactModal from "./Partials/EditContactModal";
-import DeleteContactModal from "./Partials/DeleteContactModal";
+import WithdrawalModal from "./Partials/WithdrawalModal";
 
-export default function Index({ auth, contacts, queryParams = null }) {
+export default function Index({
+    auth,
+    userAccount,
+    contacts,
+    queryParams = null,
+}) {
     queryParams = queryParams || {};
     const [isLoading, setIsLoading] = useState(false);
     const [searchParams, setSearchParams] = useState(queryParams.q || "");
-    const [showModal, setShowModal] = useState(false);
-    const [showEditModal, setShowEditModal] = useState(false);
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
-    const [contactToEdit, setContactToEdit] = useState(null);
-    const [contactToDelete, setContactToDelete] = useState(null);
     const debouncedSearchParams = useDebounce(searchParams, 800);
+    const [showModal, setShowModal] = useState(false);
+    const [contactToTransfer, setContactToTransfer] = useState(null);
     const isFirstRender = useRef(true);
 
-    // untuk menghandle search dan debouncing
     useEffect(() => {
         if (isFirstRender.current) {
             isFirstRender.current = false;
@@ -36,7 +35,7 @@ export default function Index({ auth, contacts, queryParams = null }) {
         if (debouncedSearchParams !== queryParams.q) {
             setIsLoading(true);
             router.get(
-                route("contact.index"),
+                route("withdrawal.index"),
                 { q: debouncedSearchParams },
                 {
                     preserveState: true,
@@ -52,29 +51,19 @@ export default function Index({ auth, contacts, queryParams = null }) {
         setSearchParams(e.target.value);
     };
 
-    const handleAddContact = () => {
+    const handleSendMoney = (item) => {
         setShowModal(true);
+        setContactToTransfer(item);
     };
 
-    // Fungsi untuk membuka modal untuk mengedit data
-    const handleEditContact = (contact) => {
-        setContactToEdit(contact); // Set data contact yang akan diedit
-        setShowEditModal(true);
-    };
-
-    const handleDeleteContact = (contact) => {
-        setContactToDelete(contact); // Set data contact yang akan dihapus
-        setShowDeleteModal(true);
-    };
-
-    const header = ["no", "account number", "name", "save at", "action"];
+    const header = ["no", "account number", "name", "action"];
     return (
         <AuthenticatedLayout user={auth.user}>
-            <Head title="Contact Management" />
+            <Head title="Transfer" />
             <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 pt-12">
                 <div className="bg-white overflow-hidden shadow-sm sm:rounded p-6">
-                    <Heading title="Contact Management" className="mb-6">
-                        Manage your contacts
+                    <Heading title="Transfer" className="mb-6">
+                        Send money quickly and securely.
                     </Heading>
                     <div className="w-full flex flex-col lg:flex-row lg:justify-between gap-2">
                         <SearchInput
@@ -84,12 +73,6 @@ export default function Index({ auth, contacts, queryParams = null }) {
                             isLoading={isLoading}
                             placeholder="Cari..."
                         />
-                        <PrimaryButton
-                            className="justify-center py-3 lg:py-0"
-                            onClick={handleAddContact}
-                        >
-                            Add New Contact
-                        </PrimaryButton>
                     </div>
                     <div className="mt-4">
                         <Table header={header}>
@@ -104,30 +87,17 @@ export default function Index({ auth, contacts, queryParams = null }) {
                                         className="text-center"
                                     />
                                     <Table.Td item={item.alias} />
-                                    <Table.Td
-                                        item={item.created_at}
-                                        className="text-center"
-                                    />
                                     <Table.TdAction>
                                         <SecondaryButton
+                                            className="inline-flex justify-center gap-3"
                                             onClick={() =>
-                                                handleEditContact(item)
+                                                handleSendMoney(item)
                                             }
                                         >
                                             <FontAwesomeIcon
-                                                icon={faEdit}
-                                                className="text-yellow-400"
+                                                icon={faPaperPlane}
                                             />
-                                        </SecondaryButton>
-                                        <SecondaryButton
-                                            onClick={() =>
-                                                handleDeleteContact(item)
-                                            }
-                                        >
-                                            <FontAwesomeIcon
-                                                icon={faTrash}
-                                                className="text-red-500"
-                                            />
+                                            Transfer
                                         </SecondaryButton>
                                     </Table.TdAction>
                                 </Table.Tr>
@@ -139,16 +109,12 @@ export default function Index({ auth, contacts, queryParams = null }) {
                     </div>
                 </div>
             </div>
-            <AddContactFormModal show={showModal} setShowModal={setShowModal} />
-            <EditContactModal
-                show={showEditModal}
-                setShowEditModal={setShowEditModal}
-                contactToEdit={contactToEdit}
-            />
-            <DeleteContactModal
-                show={showDeleteModal}
-                contact={contactToDelete}
-                onClose={() => setShowDeleteModal(false)}
+            <WithdrawalModal
+                show={showModal}
+                user={auth.user}
+                setShowModal={setShowModal}
+                contact={contactToTransfer}
+                userAccount={userAccount.data}
             />
         </AuthenticatedLayout>
     );

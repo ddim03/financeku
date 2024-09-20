@@ -23,19 +23,19 @@ Route::middleware(['auth', 'role:manager'])->group(function () {
     Route::resource('customer', CustomerController::class);
     Route::put('/customer/{customer}/block', [CustomerController::class, 'block'])
         ->name('customer.block');
-    
-    // Riwayat Transaksi
-    Route::get('/history-transaksi', [HistoryController::class, 'index'])->name('history.transactions');
 });
 
 // withdrawal
-Route::resource('withdrawal', WithdrawalController::class)->middleware('auth', 'checkRole:manager,teller');
+Route::get('/withdrawal', [WithdrawalController::class, 'index'])->name('history.transactions');
 
 
 Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::resource('contact', ContactController::class);
     Route::get('/transfer', [TransferController::class, 'index'])->name('transfer.index');
     Route::post('/transfer', [TransferController::class, 'store'])->name('transfer.store');
+
+    // Riwayat Transaksi
+    Route::get('/history-transaksi', [HistoryController::class, 'index'])->name('history.transactions');
 });
 
 Route::resource('contact', ContactController::class);

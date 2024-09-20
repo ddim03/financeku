@@ -46,7 +46,7 @@ class CustomerController extends Controller
         $validated['password'] = Hash::make($validated['password']);
 
         User::create($validated);
-        return redirect()->route('Customer/customerManagement');
+        return redirect()->route('customer.index');
     }
 
     /**
@@ -69,7 +69,7 @@ class CustomerController extends Controller
             $validated['password'] = Hash::make($validated['password']);
         }
         $customer->update($validated);
-        return redirect()->route('Customer/customerManagement');
+        return redirect()->route('customer.index');
     }
 
     /**
@@ -78,7 +78,7 @@ class CustomerController extends Controller
     public function destroy(User $customer)
     {
         $customer->delete();
-        return redirect()->route('Customer/customerManagement');
+        return redirect()->route('customer.index');
     }
 
 
@@ -92,6 +92,6 @@ class CustomerController extends Controller
         } else {
             $customer->update(['is_active' => 1]);
         }
-        return redirect()->route('Customer/customerManagement');
+        return redirect()->route('customer.index');
     }
 }
