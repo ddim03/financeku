@@ -15,7 +15,7 @@ import {
 import { Head } from "@inertiajs/react";
 
 export default function Index({ auth, statistics, transactions }) {
-    const header = ["no", "date", "account number", "type", "amount"];
+    const header = ["no", "date", "account", "type", "amount"];
     return (
         <AuthenticatedLayout user={auth.user}>
             <Head title="Dashboard" />
@@ -30,13 +30,16 @@ export default function Index({ auth, statistics, transactions }) {
                         >
                             Welcome to your personal e-finance dashboard.
                         </Heading>
-                        <div className="flex gap-6">
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                             <Stat
                                 title="Total Balance"
                                 value={currencyFormat(statistics.balance)}
                                 variant={"info"}
                                 icon={faWallet}
-                                description="This Account"
+                                description={
+                                    "Account Number: " +
+                                    auth.user.account.account_number
+                                }
                             />
                             <Stat
                                 title="Income"
@@ -71,7 +74,8 @@ export default function Index({ auth, statistics, transactions }) {
 
                                     let accountNumber = showAccountNumber(
                                         item.account,
-                                        item.target_account
+                                        item.target_account,
+                                        item.type
                                     );
 
                                     let variant = selectVariant(item.type);

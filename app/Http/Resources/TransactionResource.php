@@ -20,13 +20,13 @@ class TransactionResource extends JsonResource
             'id' => $this->id,
             'account' => new AccountResource($this->account),
             'target_account' => $this->target_account_id ? new AccountResource(Account::find($this->target_account_id)) : null,
-            'user' => new UserResource($this->account->user),
             'type' => $this->transaction_type,
             'current' => $this->current,
             'debit' => $this->debit,
             'credit' => $this->credit,
             'final' => $this->final,
             'date' => Carbon::parse($this->transaction_date)->format('Y-m-d H:i:s'),
+            'message' => $this->message ?? "-"
         ];
     }
 }

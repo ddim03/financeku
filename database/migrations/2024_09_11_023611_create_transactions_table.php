@@ -19,6 +19,7 @@ return new class extends Migration
             $table->bigInteger('debit')->nullable();
             $table->bigInteger('credit')->nullable();
             $table->bigInteger('final')->nullable();
+            $table->string('message')->nullable();
             $table->foreignId('target_account_id')->nullable()->constrained('accounts')->onDelete('cascade');
             $table->timestamp('transaction_date')->useCurrent();
             $table->timestamps();

@@ -82,7 +82,7 @@ export default function Index({ auth, customers, queryParams = null }) {
         setShowBlockModal(true);
     };
 
-    const header = ["no", "nama", "email", "alamat", "status", "action"];
+    const header = ["no", "name", "email", "address", "status", "action"];
     return (
         <AuthenticatedLayout user={auth.user}>
             <Head title="Customer Management" />

@@ -46,7 +46,13 @@ export default function AuthenticatedLayout({ user, children }) {
                                         >
                                             Customer
                                         </NavLink>
-                                        <NavLink href={route("dashboard")}>
+                                        <NavLink
+                                            href={route("cash.index")}
+                                            active={
+                                                route().current("cash.*") ||
+                                                route().current("history.*")
+                                            }
+                                        >
                                             Transaction
                                         </NavLink>
                                     </>
@@ -69,8 +75,13 @@ export default function AuthenticatedLayout({ user, children }) {
                                         >
                                             Contact
                                         </NavLink>
-                                        <NavLink href={route("dashboard")}>
-                                            Activity
+                                        <NavLink
+                                            href={route("history.index")}
+                                            active={route().current(
+                                                "history.*"
+                                            )}
+                                        >
+                                            History
                                         </NavLink>
                                     </>
                                 )}
@@ -186,17 +197,29 @@ export default function AuthenticatedLayout({ user, children }) {
                                 Teller
                             </ResponsiveNavLink>
                         )}
-                        <ResponsiveNavLink href={route("dashboard")}>
+                        <ResponsiveNavLink
+                            href={route("customer.index")}
+                            active={route().current("customer.*")}
+                        >
                             Customer
                         </ResponsiveNavLink>
                         {user.role !== "customer" && (
-                            <ResponsiveNavLink href={route("dashboard")}>
+                            <ResponsiveNavLink
+                                href={route("cash.index")}
+                                active={
+                                    route().current("cash.*") ||
+                                    route().current("history.*")
+                                }
+                            >
                                 Transaction
                             </ResponsiveNavLink>
                         )}
                         {user.role === "customer" && (
-                            <ResponsiveNavLink href={route("dashboard")}>
-                                Activity
+                            <ResponsiveNavLink
+                                href={route("history.index")}
+                                active={route().current("history.*")}
+                            >
+                                History
                             </ResponsiveNavLink>
                         )}
                     </div>

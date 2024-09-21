@@ -7,6 +7,7 @@ use Inertia\Inertia;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
+use App\Models\Account;
 use Illuminate\Support\Facades\Hash;
 
 class CustomerController extends Controller
@@ -46,7 +47,13 @@ class CustomerController extends Controller
         $validated['role'] = 'customer';
         $validated['password'] = Hash::make($validated['password']);
 
-        User::create($validated);
+        $user = User::create($validated);
+        $accountNumber = Account::generateAccountNumber();
+        Account::create([
+            'user_id' => $user->id,
+            'account_number' => $accountNumber,
+            'balance' => 0
+        ]);
         return redirect()->route('customer.index');
     }
 

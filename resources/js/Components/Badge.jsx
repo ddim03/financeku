@@ -9,7 +9,7 @@ export default function Badge({ value, variant }) {
     return (
         <span
             className={
-                "text-xs font-medium px-2.5 py-0.5 rounded border " +
+                "text-xs font-medium px-2.5 py-0.5 rounded border text-nowrap " +
                 classVariant[variant]
             }
         >
