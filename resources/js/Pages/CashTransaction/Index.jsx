@@ -16,8 +16,14 @@ import { Head, Link, router } from "@inertiajs/react";
 import { useEffect, useRef, useState } from "react";
 import DepositModal from "./Partials/DepositModal";
 import WithdrawModal from "./Partials/WithdrawModal";
+import Toast from "@/Components/Toast";
 
-export default function Index({ auth, customers, queryParams = null }) {
+export default function Index({
+    auth,
+    customers,
+    queryParams = null,
+    success = null,
+}) {
     queryParams = queryParams || {};
     const [isLoading, setIsLoading] = useState(false);
     const [searchParams, setSearchParams] = useState(queryParams.q || "");
@@ -25,6 +31,7 @@ export default function Index({ auth, customers, queryParams = null }) {
     const [showWithdrawModal, setShowWithdrawModal] = useState(false);
     const [customerToDeposit, setCustomerToDeposit] = useState(null);
     const [customerToWithdraw, setCustomerToWithdraw] = useState(null);
+    const [successMessage, setSuccessMessage] = useState(false);
     const debouncedSearchParams = useDebounce(searchParams, 800);
     const isFirstRender = useRef(true);
 
@@ -49,6 +56,17 @@ export default function Index({ auth, customers, queryParams = null }) {
             );
         }
     }, [debouncedSearchParams, queryParams.q]);
+
+    useEffect(() => {
+        if (success) {
+            setSuccessMessage(true);
+            let timeout = setTimeout(() => {
+                setSuccessMessage(false);
+            }, 2000);
+
+            return () => clearTimeout(timeout);
+        }
+    }, [success]);
 
     // melacak perubahan value pada search input
     const handleSearchChange = (e) => {
@@ -151,6 +169,7 @@ export default function Index({ auth, customers, queryParams = null }) {
                 setShowModal={setShowWithdrawModal}
                 customer={customerToWithdraw}
             />
+            {successMessage && <Toast message={success} variant="success" />}
         </AuthenticatedLayout>
     );
 }

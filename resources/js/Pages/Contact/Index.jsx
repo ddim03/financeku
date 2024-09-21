@@ -13,8 +13,14 @@ import { useDebounce } from "@/Hooks/useDebounce";
 import AddContactFormModal from "./Partials/AddContactModal";
 import EditContactModal from "./Partials/EditContactModal";
 import DeleteContactModal from "./Partials/DeleteContactModal";
+import Toast from "@/Components/Toast";
 
-export default function Index({ auth, contacts, queryParams = null }) {
+export default function Index({
+    auth,
+    contacts,
+    queryParams = null,
+    success = null,
+}) {
     queryParams = queryParams || {};
     const [isLoading, setIsLoading] = useState(false);
     const [searchParams, setSearchParams] = useState(queryParams.q || "");
@@ -23,6 +29,7 @@ export default function Index({ auth, contacts, queryParams = null }) {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [contactToEdit, setContactToEdit] = useState(null);
     const [contactToDelete, setContactToDelete] = useState(null);
+    const [successMessage, setSuccessMessage] = useState(false);
     const debouncedSearchParams = useDebounce(searchParams, 800);
     const isFirstRender = useRef(true);
 
@@ -47,6 +54,17 @@ export default function Index({ auth, contacts, queryParams = null }) {
             );
         }
     }, [debouncedSearchParams, queryParams.q]);
+
+    useEffect(() => {
+        if (success) {
+            setSuccessMessage(true);
+            let timeout = setTimeout(() => {
+                setSuccessMessage(false);
+            }, 2000);
+
+            return () => clearTimeout(timeout);
+        }
+    }, [success]);
 
     const handleSearchChange = (e) => {
         setSearchParams(e.target.value);
@@ -150,6 +168,7 @@ export default function Index({ auth, contacts, queryParams = null }) {
                 contact={contactToDelete}
                 onClose={() => setShowDeleteModal(false)}
             />
+            {successMessage && <Toast message={success} variant="success" />}
         </AuthenticatedLayout>
     );
 }

@@ -42,6 +42,8 @@ export default function TellerFormModal({
         e.preventDefault();
         if (tellerToEdit) {
             put(route("teller.update", tellerToEdit.id), {
+                preserveScroll: true,
+                preserveState: false,
                 onSuccess: () => {
                     setShowModal(false);
                     reset();
@@ -49,6 +51,8 @@ export default function TellerFormModal({
             });
         } else {
             post(route("teller.store"), {
+                preserveScroll: true,
+                preserveState: false,
                 onSuccess: () => {
                     setShowModal(false);
                     reset();

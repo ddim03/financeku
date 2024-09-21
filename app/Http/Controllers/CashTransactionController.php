@@ -41,6 +41,7 @@ class CashTransactionController extends Controller
         return Inertia::render('CashTransaction/Index', [
             'customers' => CustomerResource::collection($customers),
             'queryParams' => request()->query() ?: null,
+            'success' => session('success') ?: null
         ]);
     }
 
@@ -74,6 +75,7 @@ class CashTransactionController extends Controller
             $customerAccount->balance = $final;
             $customerAccount->save();
             DB::commit();
+            return redirect()->back()->with('success', 'Withdrawal Successful');
         } catch (\Throwable $th) {
             DB::rollBack();
             throw $th;
@@ -107,6 +109,7 @@ class CashTransactionController extends Controller
             $customerAccount->balance = $final;
             $customerAccount->save();
             DB::commit();
+            return redirect()->back()->with('success', 'Deposit Successful');
         } catch (\Throwable $th) {
             DB::rollBack();
             throw $th;

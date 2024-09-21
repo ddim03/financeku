@@ -42,6 +42,8 @@ export default function CustomerFormModal({
         e.preventDefault();
         if (customerToEdit) {
             put(route("customer.update", customerToEdit.id), {
+                preserveScroll: true,
+                preserveState: false,
                 onSuccess: () => {
                     setShowModal(false);
                     reset();
@@ -49,6 +51,8 @@ export default function CustomerFormModal({
             });
         } else {
             post(route("customer.store"), {
+                preserveScroll: true,
+                preserveState: false,
                 onSuccess: () => {
                     setShowModal(false);
                     reset();

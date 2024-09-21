@@ -33,6 +33,7 @@ class CustomerController extends Controller
         return Inertia::render('Customer/Index', [
             'customers' => UserResource::collection($users),
             'queryParams' => request()->query() ?: null,
+            'success' => session('success') ?: null
         ]);
     }
 
@@ -57,7 +58,7 @@ class CustomerController extends Controller
             'account_number' => $accountNumber,
             'balance' => 0
         ]);
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Customer created successfully');
     }
 
     /**
@@ -80,7 +81,7 @@ class CustomerController extends Controller
             $validated['password'] = Hash::make($validated['password']);
         }
         $customer->update($validated);
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Customer updated successfully');
     }
 
     /**
@@ -89,7 +90,7 @@ class CustomerController extends Controller
     public function destroy(User $customer)
     {
         $customer->delete();
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Customer deleted successfully');
     }
 
 
@@ -103,6 +104,6 @@ class CustomerController extends Controller
         } else {
             $customer->update(['is_active' => 1]);
         }
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Customer updated successfully');
     }
 }

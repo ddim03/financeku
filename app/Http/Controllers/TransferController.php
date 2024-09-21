@@ -40,6 +40,7 @@ class TransferController extends Controller
             'userAccount' => new AccountResource(Auth::user()->account),
             'contacts' => ContactResource::collection($contacts),
             'queryParams' => request()->query() ?: null,
+            'success' => session('success') ?: null
         ]);
     }
 
@@ -93,7 +94,7 @@ class TransferController extends Controller
             $currentAccount->save();
 
             DB::commit();
-            return redirect()->back();
+            return redirect()->back()->with('success', 'Transfer Successful');
         } catch (\Throwable $th) {
             DB::rollBack();
             throw $th;
