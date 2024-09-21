@@ -39,6 +39,7 @@ class ContactController extends Controller
         return Inertia::render('Contact/Index', [
             'contacts' => ContactResource::collection($contacts),
             'queryParams' => request()->query() ?: null,
+            'success' => session('success') ?: null
         ]);
     }
 
@@ -72,7 +73,7 @@ class ContactController extends Controller
             'user_id' => Auth::user()->id
         ]);
 
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Contact created successfully');
     }
 
 
@@ -88,7 +89,7 @@ class ContactController extends Controller
         $contact->update([
             'alias' => $request->alias
         ]);
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Contact updated successfully');
     }
 
     /**
@@ -97,6 +98,6 @@ class ContactController extends Controller
     public function destroy(Contact $contact)
     {
         $contact->delete();
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Contact deleted successfully');
     }
 }

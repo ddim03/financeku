@@ -19,8 +19,14 @@ import { useEffect, useRef, useState } from "react";
 import CustomerFormModal from "./Partilals/CustomerFormModal";
 import DeleteCustomerModal from "./Partilals/DeleteCustomerModal";
 import BlockCustomerModal from "./Partilals/BlockCustomerModal";
+import Toast from "@/Components/Toast";
 
-export default function Index({ auth, customers, queryParams = null }) {
+export default function Index({
+    auth,
+    customers,
+    queryParams = null,
+    success = null,
+}) {
     queryParams = queryParams || {};
     const [isLoading, setIsLoading] = useState(false);
     const [searchParams, setSearchParams] = useState(queryParams.q || "");
@@ -30,6 +36,7 @@ export default function Index({ auth, customers, queryParams = null }) {
     const [customerToEdit, setcustomerToEdit] = useState(null);
     const [customerToDelete, setcustomerToDelete] = useState(null);
     const [customerToBlock, setcustomerToBlock] = useState(null);
+    const [successMessage, setSuccessMessage] = useState(false);
     const debouncedSearchParams = useDebounce(searchParams, 800);
     const isFirstRender = useRef(true);
 
@@ -54,6 +61,17 @@ export default function Index({ auth, customers, queryParams = null }) {
             );
         }
     }, [debouncedSearchParams, queryParams.q]);
+
+    useEffect(() => {
+        if (success) {
+            setSuccessMessage(true);
+            let timeout = setTimeout(() => {
+                setSuccessMessage(false);
+            }, 2000);
+
+            return () => clearTimeout(timeout);
+        }
+    }, [success]);
 
     // melacak perubahan value pada search input
     const handleSearchChange = (e) => {
@@ -194,6 +212,7 @@ export default function Index({ auth, customers, queryParams = null }) {
                 customer={customerToBlock}
                 onClose={setShowBlockModal}
             />
+            {successMessage && <Toast message={success} variant="success" />}
         </AuthenticatedLayout>
     );
 }

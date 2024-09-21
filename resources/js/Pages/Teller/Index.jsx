@@ -19,8 +19,14 @@ import { useEffect, useRef, useState } from "react";
 import TellerFormModal from "./Partials/TellerFormModal";
 import DeleteTellerModal from "./Partials/DeleteTellerModal";
 import BlockTellerModal from "./Partials/BlockTellerModal";
+import Toast from "@/Components/Toast";
 
-export default function Index({ auth, tellers, queryParams = null }) {
+export default function Index({
+    auth,
+    tellers,
+    queryParams = null,
+    success = null,
+}) {
     queryParams = queryParams || {};
     const [isLoading, setIsLoading] = useState(false);
     const [searchParams, setSearchParams] = useState(queryParams.q || "");
@@ -30,6 +36,7 @@ export default function Index({ auth, tellers, queryParams = null }) {
     const [tellerToEdit, setTellerToEdit] = useState(null);
     const [tellerToDelete, setTellerToDelete] = useState(null);
     const [tellerToBlock, setTellerToBlock] = useState(null);
+    const [successMessage, setSuccessMessage] = useState(false);
     const debouncedSearchParams = useDebounce(searchParams, 800);
     const isFirstRender = useRef(true);
 
@@ -54,6 +61,17 @@ export default function Index({ auth, tellers, queryParams = null }) {
             );
         }
     }, [debouncedSearchParams, queryParams.q]);
+
+    useEffect(() => {
+        if (success) {
+            setSuccessMessage(true);
+            let timeout = setTimeout(() => {
+                setSuccessMessage(false);
+            }, 2000);
+
+            return () => clearTimeout(timeout);
+        }
+    }, [success]);
 
     // melacak perubahan value pada search input
     const handleSearchChange = (e) => {
@@ -197,6 +215,7 @@ export default function Index({ auth, tellers, queryParams = null }) {
                 teller={tellerToBlock}
                 onClose={setShowBlockModal}
             />
+            {successMessage && <Toast message={success} variant="success" />}
         </AuthenticatedLayout>
     );
 }

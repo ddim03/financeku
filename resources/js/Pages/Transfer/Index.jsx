@@ -1,6 +1,5 @@
 import Heading from "@/Components/Heading";
 import Pagination from "@/Components/Pagination";
-import PrimaryButton from "@/Components/PrimaryButton";
 import SearchInput from "@/Components/SearchInput";
 import SecondaryButton from "@/Components/SecondaryButton";
 import Table from "@/Components/Table";
@@ -11,12 +10,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Head, router } from "@inertiajs/react";
 import { useEffect, useRef, useState } from "react";
 import TransferModal from "./Partials/TransferModal";
+import Toast from "@/Components/Toast";
 
 export default function Index({
     auth,
     userAccount,
     contacts,
     queryParams = null,
+    success = null,
 }) {
     queryParams = queryParams || {};
     const [isLoading, setIsLoading] = useState(false);
@@ -24,6 +25,7 @@ export default function Index({
     const debouncedSearchParams = useDebounce(searchParams, 800);
     const [showModal, setShowModal] = useState(false);
     const [contactToTransfer, setContactToTransfer] = useState(null);
+    const [successMessage, setSuccessMessage] = useState(false);
     const isFirstRender = useRef(true);
 
     useEffect(() => {
@@ -46,6 +48,17 @@ export default function Index({
             );
         }
     }, [debouncedSearchParams, queryParams.q]);
+
+    useEffect(() => {
+        if (success) {
+            setSuccessMessage(true);
+            let timeout = setTimeout(() => {
+                setSuccessMessage(false);
+            }, 2000);
+
+            return () => clearTimeout(timeout);
+        }
+    }, [success]);
 
     const handleSearchChange = (e) => {
         setSearchParams(e.target.value);
@@ -116,6 +129,7 @@ export default function Index({
                 contact={contactToTransfer}
                 userAccount={userAccount.data}
             />
+            {successMessage && <Toast message={success} variant="success" />}
         </AuthenticatedLayout>
     );
 }

@@ -37,6 +37,8 @@ export default function EditContactModal({
         e.preventDefault();
 
         put(route("contact.update", contactToEdit.id), {
+            preserveScroll: true,
+            preserveState: false,
             onSuccess: () => {
                 setShowEditModal(false);
                 reset();
