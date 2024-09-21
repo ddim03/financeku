@@ -45,7 +45,7 @@ class DatabaseSeeder extends Seeder
             if ($user->role == 'customer') {
                 Account::create([
                     'user_id' => $user->id,
-                    'account_number' => fake()->randomNumber(9, true),
+                    'account_number' => Account::generateAccountNumber(),
                     'balance' => 0
                 ]);
             }
@@ -76,7 +76,8 @@ class DatabaseSeeder extends Seeder
                 'transaction_type' => 'deposit',
                 'current' => $balance,
                 'debit' => $debit,
-                'final' => $final
+                'final' => $final,
+                'message' => 'initial deposit'
             ]);
             $account->update(['balance' => $final]);
         }
@@ -90,7 +91,8 @@ class DatabaseSeeder extends Seeder
                 'transaction_type' => 'withdraw',
                 'current' => $balance,
                 'credit' => $credit,
-                'final' => $final
+                'final' => $final,
+                'message' => 'first withdraw'
             ]);
             $account->update(['balance' => $final]);
         }
@@ -126,7 +128,8 @@ class DatabaseSeeder extends Seeder
                 'transaction_type' => 'transfer out',
                 'current' => $balance,
                 'credit' => $amount,
-                'final' => $final
+                'final' => $final,
+                'message' => 'transfer out'
             ]);
 
             // in
@@ -136,7 +139,8 @@ class DatabaseSeeder extends Seeder
                 'transaction_type' => 'transfer in',
                 'current' => $targetBalance,
                 'debit' => $amount,
-                'final' => $targetFinal
+                'final' => $targetFinal,
+                'message' => 'transfer in'
             ]);
 
             $account->update(['balance' => $final]);

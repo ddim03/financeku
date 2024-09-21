@@ -14,8 +14,8 @@ export default function Stat({
         warning: " border-yellow-100 bg-yellow-50 text-yellow-500",
     };
     return (
-        <div className="p-5 border rounded w-full">
-            <div className="flex grow items-center justify-between">
+        <div className="p-5 border rounded">
+            <div className="flex items-center justify-between">
                 <dl>
                     <dt className="text-2xl font-bold">{value}</dt>
                     <dd className="text-sm font-medium text-slate-500 mt-1">

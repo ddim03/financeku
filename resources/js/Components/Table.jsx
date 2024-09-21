@@ -25,8 +25,8 @@ const Tr = ({ children }) => (
     <tr className="even:bg-gray-100 odd:bg-white">{children}</tr>
 );
 
-const Td = ({ item, className }) => (
-    <td className={"px-6 py-4 " + className}>{item}</td>
+const Td = ({ item, className = "" }) => (
+    <td className={"px-5 py-4 " + className}>{item}</td>
 );
 
 const TdAction = ({ children }) => (

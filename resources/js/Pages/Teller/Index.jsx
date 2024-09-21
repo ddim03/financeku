@@ -82,7 +82,7 @@ export default function Index({ auth, tellers, queryParams = null }) {
         setShowBlockModal(true);
     };
 
-    const header = ["no", "nama", "email", "alamat", "status", "action"];
+    const header = ["no", "name", "email", "address", "status", "action"];
     return (
         <AuthenticatedLayout user={auth.user}>
             <Head title="Teller Management" />
@@ -111,7 +111,10 @@ export default function Index({ auth, tellers, queryParams = null }) {
                         <Table header={header}>
                             {tellers.data.map((item, index) => (
                                 <Table.Tr key={index}>
-                                    <Table.Td item={index + 1} />
+                                    <Table.Td
+                                        className="text-center"
+                                        item={index + 1}
+                                    />
                                     <Table.Td item={item.name} />
                                     <Table.Td item={item.email} />
                                     <Table.Td item={item.address} />

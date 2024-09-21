@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\CashTransactionController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TellerController;
 use App\Http\Controllers\TransferController;
@@ -20,6 +22,10 @@ Route::middleware(['auth', 'role:manager,teller'])->group(function () {
     Route::resource('customer', CustomerController::class);
     Route::put('customer/{customer}/block', [CustomerController::class, 'block'])
         ->name('customer.block');
+    Route::get('/cash', [CashTransactionController::class, 'index'])->name('cash.index');
+    Route::post('/cash/deposit', [CashTransactionController::class, 'deposit'])->name('cash.deposit.store');
+    Route::post('/cash/withdraw', [CashTransactionController::class, 'withdraw'])->name('cash.withdraw.store');
+    Route::get('/customer-history/{customer}', [HistoryController::class, 'index'])->name('history.index');
 });
 
 Route::middleware(['auth', 'role:customer'])->group(function () {
@@ -27,8 +33,8 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::get('/transfer', [TransferController::class, 'index'])->name('transfer.index');
     Route::post('/transfer', [TransferController::class, 'store'])->name('transfer.store');
     Route::resource('contact', ContactController::class);
+    Route::get('history', [HistoryController::class, 'show'])->name('history.customer');
 });
-
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');

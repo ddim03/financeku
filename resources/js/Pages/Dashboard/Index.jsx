@@ -14,7 +14,7 @@ import {
 import { Head } from "@inertiajs/react";
 
 export default function Index({ auth, statistics, transactions }) {
-    const header = ["no", "date", "name", "account number", "type", "amount"];
+    const header = ["no", "date", "name", "account", "type", "amount"];
 
     return (
         <AuthenticatedLayout user={auth.user}>
@@ -30,7 +30,7 @@ export default function Index({ auth, statistics, transactions }) {
                         >
                             Welcome to your personal e-finance dashboard.
                         </Heading>
-                        <div className="flex gap-6">
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                             <Stat
                                 title="Total Customer"
                                 value={statistics.total_customers}
@@ -69,7 +69,8 @@ export default function Index({ auth, statistics, transactions }) {
 
                                     let accountNumber = showAccountNumber(
                                         item.account,
-                                        item.target_account
+                                        item.target_account,
+                                        item.type
                                     );
 
                                     let variant = selectVariant(item.type);
@@ -80,10 +81,18 @@ export default function Index({ auth, statistics, transactions }) {
                                     );
                                     return (
                                         <Table.Tr key={index}>
-                                            <Table.Td item={index + 1} />
+                                            <Table.Td
+                                                className="text-center"
+                                                item={index + 1}
+                                            />
                                             <Table.Td item={item.date} />
-                                            <Table.Td item={item.user.name} />
-                                            <Table.Td item={accountNumber} />
+                                            <Table.Td
+                                                item={item.account.user.name}
+                                            />
+                                            <Table.Td
+                                                className="text-nowrap"
+                                                item={accountNumber}
+                                            />
                                             <Table.Td
                                                 item={
                                                     <Badge

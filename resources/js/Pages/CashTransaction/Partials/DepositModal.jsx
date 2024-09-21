@@ -7,40 +7,17 @@ import SecondaryButton from "@/Components/SecondaryButton";
 import TextAreaInput from "@/Components/TextAreaInput";
 import TextInput from "@/Components/TextInput";
 import { useForm } from "@inertiajs/react";
-import React, { useEffect, useState } from "react";
+import { useEffect } from "react";
 
-export default function TransferModal({
-    show,
-    setShowModal,
-    contact,
-    userAccount,
-}) {
-    const { data, setData, post, processing, errors, reset } = useForm({
-        account_id: userAccount.id,
-        target_account_id: "",
-        amount: 0,
+export default function DepositModal({ show, setShowModal, customer }) {
+    const { setData, post, processing, errors, reset } = useForm({
+        account_id: "",
+        amount: "",
         message: "",
     });
-
-    const [isMoreThanBalance, setIsMoreThanBalance] = useState(false);
-
-    useEffect(() => {
-        if (data.amount > userAccount.balance) {
-            setIsMoreThanBalance(true);
-            errors.amount = "Insufficient Balance";
-        } else {
-            errors.amount = "";
-            setIsMoreThanBalance(false);
-        }
-    }, [data.amount, userAccount.balance]);
-
-    useEffect(() => {
-        setData("target_account_id", contact?.account?.id);
-    }, [contact]);
-
     const handleSubmit = (e) => {
         e.preventDefault();
-        post(route("transfer.store"), {
+        post(route("cash.deposit.store"), {
             onSuccess: () => {
                 setShowModal(false);
                 reset();
@@ -48,30 +25,26 @@ export default function TransferModal({
         });
     };
 
+    useEffect(() => {
+        setData("account_id", customer?.account.id);
+    }, [customer]);
+
     return (
-        <Modal show={show} onClose={() => setShowModal(false)} maxWidth="lg">
+        <Modal show={show} maxWidth="lg">
             <div className="p-6">
                 <h2 className="text-lg font-medium text-gray-900">
-                    Transfer Your Money
+                    Customer Deposit
                 </h2>
                 <hr className="my-3 text-gray-700" />
                 <form onSubmit={handleSubmit}>
                     <div className="mt-4">
-                        <InputLabel value="Your Account" className="mb-2" />
+                        <InputLabel value="Account" className="mb-2" />
                         <DisplayAccount
-                            account_number={userAccount.account_number}
-                            name={userAccount.user.name}
+                            account_number={customer?.account.account_number}
+                            name={customer?.name}
                             isLoading={false}
-                            balance={userAccount.balance}
+                            balance={customer?.account.balance}
                             withBalance={true}
-                        />
-                    </div>
-                    <div className="mt-4">
-                        <InputLabel value="Destination" className="mb-2" />
-                        <DisplayAccount
-                            account_number={contact?.account.account_number}
-                            name={contact?.alias}
-                            isLoading={false}
                         />
                     </div>
                     <div className="mt-4">
@@ -100,11 +73,8 @@ export default function TransferModal({
                         <SecondaryButton onClick={() => setShowModal(false)}>
                             Cancel
                         </SecondaryButton>
-                        <PrimaryButton
-                            className="!px-7"
-                            disabled={processing || isMoreThanBalance}
-                        >
-                            process
+                        <PrimaryButton className="!px-7" disabled={processing}>
+                            Process
                         </PrimaryButton>
                     </div>
                 </form>
