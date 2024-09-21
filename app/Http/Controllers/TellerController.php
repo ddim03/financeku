@@ -26,8 +26,11 @@ class TellerController extends Controller
             ->paginate(10)
             ->onEachSide(1);
 
+        $users->appends(request()->query());
+
         return Inertia::render('Teller/Index', [
             'tellers' => UserResource::collection($users),
+            'queryParams' => request()->query() ?: null,
         ]);
     }
 
@@ -46,7 +49,7 @@ class TellerController extends Controller
         $validated['password'] = Hash::make($validated['password']);
 
         User::create($validated);
-        return redirect()->route('teller.index');
+        return redirect()->back();
     }
 
     /**
@@ -69,7 +72,7 @@ class TellerController extends Controller
             $validated['password'] = Hash::make($validated['password']);
         }
         $teller->update($validated);
-        return redirect()->route('teller.index');
+        return redirect()->back();
     }
 
     /**
@@ -78,7 +81,7 @@ class TellerController extends Controller
     public function destroy(User $teller)
     {
         $teller->delete();
-        return redirect()->route('teller.index');
+        return redirect()->back();
     }
 
 
@@ -92,6 +95,6 @@ class TellerController extends Controller
         } else {
             $teller->update(['is_active' => 1]);
         }
-        return redirect()->route('teller.index');
+        return redirect()->back();
     }
 }

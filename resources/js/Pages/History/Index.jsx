@@ -1,6 +1,7 @@
 import Badge from "@/Components/Badge";
 import Heading from "@/Components/Heading";
 import Pagination from "@/Components/Pagination";
+import PrimaryButton from "@/Components/PrimaryButton";
 import SelectInput from "@/Components/SelectInput";
 import Table from "@/Components/Table";
 import TextInput from "@/Components/TextInput";
@@ -8,6 +9,8 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { selectVariant } from "@/Utils/selectVariant";
 import { showAccountNumber } from "@/Utils/showAccountNumber";
 import { showAmount } from "@/Utils/showAmount";
+import { faPrint } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Head, Link, router } from "@inertiajs/react";
 import { useEffect, useRef, useState } from "react";
 
@@ -61,43 +64,60 @@ export default function Show({
                     <Heading title="Transaction History" className="mb-4">
                         All transactions of {customer.data.name}
                     </Heading>
-                    <div className="w-full flex flex-col lg:flex-row gap-2 mt-4">
-                        <TextInput
-                            type="month"
-                            min="2024-01"
-                            max="2024-12"
-                            onChange={(e) => handleChangeMonth(e)}
-                            value={selectedMonth}
-                        />
-                        <SelectInput
-                            className="pl-4 pr-9"
-                            onChange={(e) => handleChangeType(e)}
+                    <div className="w-full flex flex-col lg:flex-row justify-between items-center gap-2">
+                        <div className="w-full lg:w-1/2 flex gap-2">
+                            <TextInput
+                                type="month"
+                                min="2024-01"
+                                max="2024-12"
+                                onChange={(e) => handleChangeMonth(e)}
+                                value={selectedMonth}
+                                className="w-full"
+                            />
+                            <SelectInput
+                                className="pl-4 pr-9 w-full"
+                                onChange={(e) => handleChangeType(e)}
+                            >
+                                <option
+                                    value="deposit"
+                                    defaultValue={selectedType === "deposit"}
+                                >
+                                    Deposit
+                                </option>
+                                <option
+                                    value="withdraw"
+                                    defaultValue={selectedType === "withdraw"}
+                                >
+                                    Withdraw
+                                </option>
+                                <option
+                                    value="transfer in"
+                                    defaultValue={
+                                        selectedType === "transfer in"
+                                    }
+                                >
+                                    Transfer In
+                                </option>
+                                <option
+                                    value="transfer out"
+                                    defaultValue={
+                                        selectedType === "transfer out"
+                                    }
+                                >
+                                    Transfer Out
+                                </option>
+                            </SelectInput>
+                        </div>
+                        <a
+                            className="block h-10 w-full lg:w-fit"
+                            href={route("history.print", customer.data.id)}
+                            target="_blank"
                         >
-                            <option
-                                value="deposit"
-                                defaultValue={selectedType === "deposit"}
-                            >
-                                Deposit
-                            </option>
-                            <option
-                                value="withdraw"
-                                defaultValue={selectedType === "withdraw"}
-                            >
-                                Withdraw
-                            </option>
-                            <option
-                                value="transfer in"
-                                defaultValue={selectedType === "transfer in"}
-                            >
-                                Transfer In
-                            </option>
-                            <option
-                                value="transfer out"
-                                defaultValue={selectedType === "transfer out"}
-                            >
-                                Transfer Out
-                            </option>
-                        </SelectInput>
+                            <PrimaryButton className=" w-full h-full inline-flex gap-2 items-center">
+                                <FontAwesomeIcon icon={faPrint} />
+                                Print
+                            </PrimaryButton>
+                        </a>
                     </div>
                     <div className="mt-4">
                         <Table

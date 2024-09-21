@@ -76,7 +76,7 @@ export default function AuthenticatedLayout({ user, children }) {
                                             Contact
                                         </NavLink>
                                         <NavLink
-                                            href={route("history.index")}
+                                            href={route("history.customer")}
                                             active={route().current(
                                                 "history.*"
                                             )}
@@ -216,7 +216,7 @@ export default function AuthenticatedLayout({ user, children }) {
                         )}
                         {user.role === "customer" && (
                             <ResponsiveNavLink
-                                href={route("history.index")}
+                                href={route("history.customer")}
                                 active={route().current("history.*")}
                             >
                                 History
