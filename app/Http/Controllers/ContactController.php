@@ -21,11 +21,12 @@ class ContactController extends Controller
         $keyword = request('q');
 
         if ($keyword) {
-            $query
-                ->where('alias', 'like', '%' . $keyword . '%')
-                ->orWhereHas('account', function ($q) use ($keyword) {
-                    $q->where('account_number', 'like', '%' . $keyword . '%');
-                });
+            $query->where(function ($q) use ($keyword) {
+                $q->whereHas('account', function ($subQ) use ($keyword) {
+                    $subQ->where('account_number', 'like', '%' . $keyword . '%');
+                })
+                    ->orWhere('alias', 'like', '%' . $keyword . '%');
+            });
         }
 
         $contacts = $query
@@ -33,8 +34,11 @@ class ContactController extends Controller
             ->paginate(10)
             ->onEachSide(1);
 
+        $contacts->appends(request()->query());
+
         return Inertia::render('Contact/Index', [
             'contacts' => ContactResource::collection($contacts),
+            'queryParams' => request()->query() ?: null,
         ]);
     }
 

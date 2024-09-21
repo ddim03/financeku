@@ -28,8 +28,11 @@ class CustomerController extends Controller
             ->paginate(10)
             ->onEachSide(1);
 
+        $users->appends(request()->query());
+
         return Inertia::render('Customer/Index', [
             'customers' => UserResource::collection($users),
+            'queryParams' => request()->query() ?: null,
         ]);
     }
 
@@ -54,7 +57,7 @@ class CustomerController extends Controller
             'account_number' => $accountNumber,
             'balance' => 0
         ]);
-        return redirect()->route('customer.index');
+        return redirect()->back();
     }
 
     /**
@@ -77,7 +80,7 @@ class CustomerController extends Controller
             $validated['password'] = Hash::make($validated['password']);
         }
         $customer->update($validated);
-        return redirect()->route('customer.index');
+        return redirect()->back();
     }
 
     /**
@@ -86,7 +89,7 @@ class CustomerController extends Controller
     public function destroy(User $customer)
     {
         $customer->delete();
-        return redirect()->route('customer.index');
+        return redirect()->back();
     }
 
 
@@ -100,6 +103,6 @@ class CustomerController extends Controller
         } else {
             $customer->update(['is_active' => 1]);
         }
-        return redirect()->route('customer.index');
+        return redirect()->back();
     }
 }

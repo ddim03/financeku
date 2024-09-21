@@ -36,8 +36,11 @@ class CashTransactionController extends Controller
             ->paginate(10)
             ->onEachSide(1);
 
+        $customers->appends(request()->query());
+
         return Inertia::render('CashTransaction/Index', [
             'customers' => CustomerResource::collection($customers),
+            'queryParams' => request()->query() ?: null,
         ]);
     }
 

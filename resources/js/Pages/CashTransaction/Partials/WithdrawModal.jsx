@@ -44,7 +44,7 @@ export default function WithdrawModal({ show, setShowModal, customer }) {
         <Modal show={show} maxWidth="lg">
             <div className="p-6">
                 <h2 className="text-lg font-medium text-gray-900">
-                    Customer Deposit
+                    Customer Withdrawal
                 </h2>
                 <hr className="my-3 text-gray-700" />
                 <form onSubmit={handleSubmit}>

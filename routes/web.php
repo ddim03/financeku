@@ -26,6 +26,7 @@ Route::middleware(['auth', 'role:manager,teller'])->group(function () {
     Route::post('/cash/deposit', [CashTransactionController::class, 'deposit'])->name('cash.deposit.store');
     Route::post('/cash/withdraw', [CashTransactionController::class, 'withdraw'])->name('cash.withdraw.store');
     Route::get('/customer-history/{customer}', [HistoryController::class, 'index'])->name('history.index');
+    Route::get('/customer-history/{customer}/print', [HistoryController::class, 'print'])->name('history.print');
 });
 
 Route::middleware(['auth', 'role:customer'])->group(function () {
@@ -34,6 +35,7 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::post('/transfer', [TransferController::class, 'store'])->name('transfer.store');
     Route::resource('contact', ContactController::class);
     Route::get('history', [HistoryController::class, 'show'])->name('history.customer');
+    Route::get('history/print', [HistoryController::class, 'print'])->name('history.customer.print');
 });
 
 Route::middleware('auth')->group(function () {
