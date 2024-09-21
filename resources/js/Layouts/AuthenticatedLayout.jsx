@@ -38,7 +38,12 @@ export default function AuthenticatedLayout({ user, children }) {
                                 )}
                                 {user.role !== "customer" && (
                                     <>
-                                        <NavLink href={route("dashboard")}>
+                                        <NavLink
+                                            href={route("customer.index")}
+                                            active={route().current(
+                                                "customer.*"
+                                            )}
+                                        >
                                             Customer
                                         </NavLink>
                                         <NavLink href={route("dashboard")}>
