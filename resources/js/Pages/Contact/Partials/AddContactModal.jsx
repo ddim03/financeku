@@ -49,8 +49,6 @@ export default function AddContactFormModal({ show, setShowModal }) {
     const handleSubmit = (e) => {
         e.preventDefault();
         post(route("contact.store"), {
-            preserveScroll: true,
-            preserveState: false,
             onSuccess: () => {
                 setShowModal(false);
                 reset();

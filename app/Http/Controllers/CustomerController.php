@@ -58,7 +58,7 @@ class CustomerController extends Controller
             'account_number' => $accountNumber,
             'balance' => 0
         ]);
-        return redirect()->back()->with('success', 'Customer created successfully');
+        return redirect()->route('customer.index')->with('success', 'Customer created successfully');
     }
 
     /**
@@ -67,9 +67,9 @@ class CustomerController extends Controller
     public function update(Request $request, User $customer)
     {
         $rules = [
-            'name' => 'max:255',
-            'email' => 'max:255|email|unique:users,email,' . $customer->id,
-            'address' => '  max:255'
+            'name' => 'required|max:255',
+            'email' => 'required|max:255|email|unique:users,email,' . $customer->id,
+            'address' => 'required|max:255'
         ];
 
         if ($request->password) {

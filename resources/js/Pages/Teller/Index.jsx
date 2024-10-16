@@ -20,12 +20,14 @@ import TellerFormModal from "./Partials/TellerFormModal";
 import DeleteTellerModal from "./Partials/DeleteTellerModal";
 import BlockTellerModal from "./Partials/BlockTellerModal";
 import Toast from "@/Components/Toast";
+import { calculateStartingNumber } from "@/Utils/calculateStartingNumber";
 
 export default function Index({
     auth,
     tellers,
+    success,
+    page,
     queryParams = null,
-    success = null,
 }) {
     queryParams = queryParams || {};
     const [isLoading, setIsLoading] = useState(false);
@@ -101,6 +103,10 @@ export default function Index({
     };
 
     const header = ["no", "name", "email", "address", "status", "action"];
+    const startNumber = calculateStartingNumber(
+        tellers.meta.current_page,
+        tellers.meta.per_page
+    );
     return (
         <AuthenticatedLayout user={auth.user}>
             <Head title="Teller Management" />
@@ -127,72 +133,73 @@ export default function Index({
                     </div>
                     <div className="mt-4">
                         <Table header={header}>
-                            {tellers.data.map((item, index) => (
-                                <Table.Tr key={index}>
-                                    <Table.Td
-                                        className="text-center"
-                                        item={index + 1}
-                                    />
-                                    <Table.Td item={item.name} />
-                                    <Table.Td item={item.email} />
-                                    <Table.Td item={item.address} />
-                                    <Table.Td
-                                        item={
-                                            <Badge
-                                                value={
-                                                    item.is_active === 0
-                                                        ? "INACTIVE"
-                                                        : "ACTIVE"
-                                                }
-                                                variant={
-                                                    item.is_active === 0
-                                                        ? "danger"
-                                                        : "success"
-                                                }
-                                            />
-                                        }
-                                    />
-                                    <Table.TdAction>
-                                        <SecondaryButton
-                                            onClick={() =>
-                                                handleBlockTeller(item)
-                                            }
-                                        >
-                                            {item.is_active === 0 ? (
-                                                <FontAwesomeIcon
-                                                    icon={faCircleCheck}
-                                                    className="text-green-500"
+                            {tellers.data.map((item, index) => {
+                                const statusText =
+                                    item.is_active == 1 ? "ACTIVE" : "INACTIVE";
+                                const variant =
+                                    item.is_active == 1 ? "success" : "danger";
+
+                                const rowNumber = startNumber + index;
+
+                                return (
+                                    <Table.Tr key={index}>
+                                        <Table.Td
+                                            className="text-center"
+                                            item={rowNumber}
+                                        />
+                                        <Table.Td item={item.name} />
+                                        <Table.Td item={item.email} />
+                                        <Table.Td item={item.address} />
+                                        <Table.Td
+                                            item={
+                                                <Badge
+                                                    value={statusText}
+                                                    variant={variant}
                                                 />
-                                            ) : (
+                                            }
+                                        />
+                                        <Table.TdAction>
+                                            <SecondaryButton
+                                                onClick={() =>
+                                                    handleBlockTeller(item)
+                                                }
+                                            >
+                                                {item.is_active === 0 ? (
+                                                    <FontAwesomeIcon
+                                                        icon={faCircleCheck}
+                                                        className="text-green-500"
+                                                    />
+                                                ) : (
+                                                    <FontAwesomeIcon
+                                                        icon={faBan}
+                                                        className="text-red-500"
+                                                    />
+                                                )}
+                                            </SecondaryButton>
+                                            <SecondaryButton
+                                                onClick={() =>
+                                                    handleEditTeller(item)
+                                                }
+                                            >
                                                 <FontAwesomeIcon
-                                                    icon={faBan}
-                                                    className="text-red-500"
+                                                    icon={faEdit}
+                                                    className="text-yellow-500"
                                                 />
-                                            )}
-                                        </SecondaryButton>
-                                        <SecondaryButton
-                                            onClick={() =>
-                                                handleEditTeller(item)
-                                            }
-                                        >
-                                            <FontAwesomeIcon
-                                                icon={faEdit}
-                                                className="text-yellow-500"
-                                            />
-                                        </SecondaryButton>
-                                        <SecondaryButton
-                                            onClick={() =>
-                                                handleDeleteTeller(item)
-                                            }
-                                        >
-                                            <FontAwesomeIcon
-                                                icon={faTrash}
-                                                className="text-red-600"
-                                            />
-                                        </SecondaryButton>
-                                    </Table.TdAction>
-                                </Table.Tr>
-                            ))}
+                                            </SecondaryButton>
+                                            <SecondaryButton
+                                                onClick={() =>
+                                                    handleDeleteTeller(item)
+                                                }
+                                            >
+                                                <FontAwesomeIcon
+                                                    icon={faTrash}
+                                                    className="text-red-600"
+                                                />
+                                            </SecondaryButton>
+                                        </Table.TdAction>
+                                    </Table.Tr>
+                                );
+                            })}
                         </Table>
                         {tellers.data.length > 0 && (
                             <Pagination meta={tellers.meta} noScroll={true} />
@@ -204,11 +211,13 @@ export default function Index({
                 show={showModal}
                 setShowModal={setShowModal}
                 tellerToEdit={tellerToEdit}
+                page={page}
             />
             <DeleteTellerModal
                 show={showDeleteModal}
                 teller={tellerToDelete}
                 onClose={setShowDeleteModal}
+                page={page}
             />
             <BlockTellerModal
                 show={showBlockModal}

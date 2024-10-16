@@ -11,8 +11,9 @@ export default function TellerFormModal({
     show,
     setShowModal,
     tellerToEdit = null,
+    page,
 }) {
-    const { data, setData, post, put, processing, errors, clearErrors, reset } =
+    const { data, setData, post, processing, errors, clearErrors, reset } =
         useForm({
             name: "",
             email: "",
@@ -27,7 +28,8 @@ export default function TellerFormModal({
                     name: tellerToEdit.name,
                     email: tellerToEdit.email,
                     address: tellerToEdit.address,
-                    password: "", // Biasanya password tidak diisi saat edit
+                    password: "",
+                    _method: "put",
                 });
             } else {
                 reset();
@@ -41,9 +43,7 @@ export default function TellerFormModal({
     const handleSubmit = (e) => {
         e.preventDefault();
         if (tellerToEdit) {
-            put(route("teller.update", tellerToEdit.id), {
-                preserveScroll: true,
-                preserveState: false,
+            post(route("teller.update", [tellerToEdit.id, { page: page }]), {
                 onSuccess: () => {
                     setShowModal(false);
                     reset();
@@ -51,8 +51,6 @@ export default function TellerFormModal({
             });
         } else {
             post(route("teller.store"), {
-                preserveScroll: true,
-                preserveState: false,
                 onSuccess: () => {
                     setShowModal(false);
                     reset();

@@ -4,13 +4,11 @@ import SecondaryButton from "@/Components/SecondaryButton";
 import DangerButton from "@/Components/DangerButton";
 import { useForm } from "@inertiajs/react";
 
-export default function DeleteTellerModal({ show, teller, onClose }) {
+export default function DeleteTellerModal({ show, teller, onClose, page }) {
     const { delete: destroy, processing } = useForm();
 
     const handleDelete = () => {
-        destroy(route("teller.destroy", teller.id), {
-            preserveScroll: true,
-            preserveState: false,
+        destroy(route("teller.destroy", [teller.id, { page: page }]), {
             onSuccess: () => {
                 onClose();
             },

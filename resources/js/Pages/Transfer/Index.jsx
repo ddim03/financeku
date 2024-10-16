@@ -11,6 +11,7 @@ import { Head, router } from "@inertiajs/react";
 import { useEffect, useRef, useState } from "react";
 import TransferModal from "./Partials/TransferModal";
 import Toast from "@/Components/Toast";
+import { calculateStartingNumber } from "@/Utils/calculateStartingNumber";
 
 export default function Index({
     auth,
@@ -70,6 +71,10 @@ export default function Index({
     };
 
     const header = ["no", "account number", "name", "action"];
+    const startNumber = calculateStartingNumber(
+        contacts.meta.current_page,
+        contacts.meta.per_page
+    );
     return (
         <AuthenticatedLayout user={auth.user}>
             <Head title="Transfer" />
@@ -92,7 +97,7 @@ export default function Index({
                             {contacts.data.map((item, index) => (
                                 <Table.Tr key={index}>
                                     <Table.Td
-                                        item={index + 1}
+                                        item={startNumber + index}
                                         className="text-center"
                                     />
                                     <Table.Td

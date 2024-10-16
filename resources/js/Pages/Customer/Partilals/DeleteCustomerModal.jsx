@@ -9,8 +9,6 @@ export default function DeleteCustomerModal({ show, customer, onClose }) {
 
     const handleDelete = () => {
         destroy(route("customer.destroy", customer.id), {
-            preserveScroll: true,
-            preserveState: false,
             onSuccess: () => {
                 onClose();
             },

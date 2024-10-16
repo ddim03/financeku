@@ -9,8 +9,6 @@ export default function BlockCustomerModal({ show, customer, onClose }) {
 
     const handleDelete = () => {
         put(route("customer.block", customer.id), {
-            preserveScroll: true,
-            preserveState: false,
             onSuccess: () => {
                 onClose();
             },

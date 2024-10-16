@@ -31,7 +31,8 @@ class TellerController extends Controller
         return Inertia::render('Teller/Index', [
             'tellers' => UserResource::collection($users),
             'queryParams' => request()->query() ?: null,
-            'success' => session('success') ?: null
+            'success' => session('success') ?: null,
+            'page' => request('page') ?: null
         ]);
     }
 
@@ -59,9 +60,9 @@ class TellerController extends Controller
     public function update(Request $request, User $teller)
     {
         $rules = [
-            'name' => 'max:255',
-            'email' => 'max:255|email|unique:users,email,' . $teller->id,
-            'address' => '  max:255'
+            'name' => 'required|max:255',
+            'email' => 'required|max:255|email|unique:users,email,' . $teller->id,
+            'address' => 'required|max:255'
         ];
 
         if ($request->password) {
@@ -73,7 +74,7 @@ class TellerController extends Controller
             $validated['password'] = Hash::make($validated['password']);
         }
         $teller->update($validated);
-        return redirect()->back()->with('success', 'Teller updated successfully');
+        return redirect()->route('teller.index', ["page" => request('page')])->with('success', 'Teller updated successfully');
     }
 
     /**

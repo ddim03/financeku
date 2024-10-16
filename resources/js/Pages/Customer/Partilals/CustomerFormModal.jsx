@@ -12,7 +12,7 @@ export default function CustomerFormModal({
     setShowModal,
     customerToEdit = null,
 }) {
-    const { data, setData, post, put, processing, errors, clearErrors, reset } =
+    const { data, setData, post, processing, errors, clearErrors, reset } =
         useForm({
             name: "",
             email: "",
@@ -27,7 +27,8 @@ export default function CustomerFormModal({
                     name: customerToEdit.name,
                     email: customerToEdit.email,
                     address: customerToEdit.address,
-                    password: "", // Biasanya password tidak diisi saat edit
+                    password: "",
+                    _method: "put",
                 });
             } else {
                 reset();
@@ -41,9 +42,7 @@ export default function CustomerFormModal({
     const handleSubmit = (e) => {
         e.preventDefault();
         if (customerToEdit) {
-            put(route("customer.update", customerToEdit.id), {
-                preserveScroll: true,
-                preserveState: false,
+            post(route("customer.update", customerToEdit.id), {
                 onSuccess: () => {
                     setShowModal(false);
                     reset();
@@ -51,8 +50,6 @@ export default function CustomerFormModal({
             });
         } else {
             post(route("customer.store"), {
-                preserveScroll: true,
-                preserveState: false,
                 onSuccess: () => {
                     setShowModal(false);
                     reset();

@@ -9,8 +9,6 @@ export default function DeleteContactModal({ show, contact, onClose }) {
 
     const handleDelete = () => {
         destroy(route("contact.destroy", contact.id), {
-            preserveScroll: true,
-            preserveState: false,
             onSuccess: () => {
                 onClose();
             },

@@ -21,7 +21,7 @@ class DashboardController extends Controller
             $currentMonth = Carbon::now()->format('m');
 
             $statistics = [
-                'balance' => $account->balance,
+                'balance' => $account->balance ?? 0,
                 'income' => $account->transactions()->whereMonth('transaction_date', $currentMonth)->sum('debit'),
                 'expense' => $account->transactions()->whereMonth('transaction_date', $currentMonth)->sum('credit'),
             ];

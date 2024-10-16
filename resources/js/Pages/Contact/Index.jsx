@@ -14,13 +14,9 @@ import AddContactFormModal from "./Partials/AddContactModal";
 import EditContactModal from "./Partials/EditContactModal";
 import DeleteContactModal from "./Partials/DeleteContactModal";
 import Toast from "@/Components/Toast";
+import { calculateStartingNumber } from "@/Utils/calculateStartingNumber";
 
-export default function Index({
-    auth,
-    contacts,
-    queryParams = null,
-    success = null,
-}) {
+export default function Index({ auth, contacts, success, queryParams = null }) {
     queryParams = queryParams || {};
     const [isLoading, setIsLoading] = useState(false);
     const [searchParams, setSearchParams] = useState(queryParams.q || "");
@@ -86,6 +82,10 @@ export default function Index({
     };
 
     const header = ["no", "account number", "name", "save at", "action"];
+    const startNumber = calculateStartingNumber(
+        contacts.meta.current_page,
+        contacts.meta.per_page
+    );
     return (
         <AuthenticatedLayout user={auth.user}>
             <Head title="Contact Management" />
@@ -111,45 +111,48 @@ export default function Index({
                     </div>
                     <div className="mt-4">
                         <Table header={header}>
-                            {contacts.data.map((item, index) => (
-                                <Table.Tr key={index}>
-                                    <Table.Td
-                                        item={index + 1}
-                                        className="text-center"
-                                    />
-                                    <Table.Td
-                                        item={item.account.account_number}
-                                        className="text-center"
-                                    />
-                                    <Table.Td item={item.alias} />
-                                    <Table.Td
-                                        item={item.created_at}
-                                        className="text-center"
-                                    />
-                                    <Table.TdAction>
-                                        <SecondaryButton
-                                            onClick={() =>
-                                                handleEditContact(item)
-                                            }
-                                        >
-                                            <FontAwesomeIcon
-                                                icon={faEdit}
-                                                className="text-yellow-400"
-                                            />
-                                        </SecondaryButton>
-                                        <SecondaryButton
-                                            onClick={() =>
-                                                handleDeleteContact(item)
-                                            }
-                                        >
-                                            <FontAwesomeIcon
-                                                icon={faTrash}
-                                                className="text-red-500"
-                                            />
-                                        </SecondaryButton>
-                                    </Table.TdAction>
-                                </Table.Tr>
-                            ))}
+                            {contacts.data.map((item, index) => {
+                                const rowNumber = startNumber + index;
+                                return (
+                                    <Table.Tr key={index}>
+                                        <Table.Td
+                                            item={rowNumber}
+                                            className="text-center"
+                                        />
+                                        <Table.Td
+                                            item={item.account.account_number}
+                                            className="text-center"
+                                        />
+                                        <Table.Td item={item.alias} />
+                                        <Table.Td
+                                            item={item.created_at}
+                                            className="text-center"
+                                        />
+                                        <Table.TdAction>
+                                            <SecondaryButton
+                                                onClick={() =>
+                                                    handleEditContact(item)
+                                                }
+                                            >
+                                                <FontAwesomeIcon
+                                                    icon={faEdit}
+                                                    className="text-yellow-400"
+                                                />
+                                            </SecondaryButton>
+                                            <SecondaryButton
+                                                onClick={() =>
+                                                    handleDeleteContact(item)
+                                                }
+                                            >
+                                                <FontAwesomeIcon
+                                                    icon={faTrash}
+                                                    className="text-red-500"
+                                                />
+                                            </SecondaryButton>
+                                        </Table.TdAction>
+                                    </Table.Tr>
+                                );
+                            })}
                         </Table>
                         {contacts.data.length > 0 && (
                             <Pagination meta={contacts.meta} noScroll={true} />

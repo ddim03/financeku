@@ -20,6 +20,7 @@ import CustomerFormModal from "./Partilals/CustomerFormModal";
 import DeleteCustomerModal from "./Partilals/DeleteCustomerModal";
 import BlockCustomerModal from "./Partilals/BlockCustomerModal";
 import Toast from "@/Components/Toast";
+import { calculateStartingNumber } from "@/Utils/calculateStartingNumber";
 
 export default function Index({
     auth,
@@ -101,6 +102,10 @@ export default function Index({
     };
 
     const header = ["no", "name", "email", "address", "status", "action"];
+    const startNumber = calculateStartingNumber(
+        customers.meta.current_page,
+        customers.meta.per_page
+    );
     return (
         <AuthenticatedLayout user={auth.user}>
             <Head title="Customer Management" />
@@ -127,69 +132,69 @@ export default function Index({
                     </div>
                     <div className="mt-4">
                         <Table header={header}>
-                            {customers.data.map((item, index) => (
-                                <Table.Tr key={index}>
-                                    <Table.Td item={index + 1} />
-                                    <Table.Td item={item.name} />
-                                    <Table.Td item={item.email} />
-                                    <Table.Td item={item.address} />
-                                    <Table.Td
-                                        item={
-                                            <Badge
-                                                value={
-                                                    item.is_active === 0
-                                                        ? "INACTIVE"
-                                                        : "ACTIVE"
-                                                }
-                                                variant={
-                                                    item.is_active === 0
-                                                        ? "danger"
-                                                        : "success"
-                                                }
-                                            />
-                                        }
-                                    />
-                                    <Table.TdAction>
-                                        <SecondaryButton
-                                            onClick={() =>
-                                                handleBlockcustomer(item)
-                                            }
-                                        >
-                                            {item.is_active === 0 ? (
-                                                <FontAwesomeIcon
-                                                    icon={faCircleCheck}
-                                                    className="text-green-500"
+                            {customers.data.map((item, index) => {
+                                const statusText =
+                                    item.is_active == 1 ? "ACTIVE" : "INACTIVE";
+                                const variant =
+                                    item.is_active == 1 ? "success" : "danger";
+
+                                const rowNumber = startNumber + index;
+                                return (
+                                    <Table.Tr key={index}>
+                                        <Table.Td item={rowNumber} />
+                                        <Table.Td item={item.name} />
+                                        <Table.Td item={item.email} />
+                                        <Table.Td item={item.address} />
+                                        <Table.Td
+                                            item={
+                                                <Badge
+                                                    value={statusText}
+                                                    variant={variant}
                                                 />
-                                            ) : (
+                                            }
+                                        />
+                                        <Table.TdAction>
+                                            <SecondaryButton
+                                                onClick={() =>
+                                                    handleBlockcustomer(item)
+                                                }
+                                            >
+                                                {item.is_active === 0 ? (
+                                                    <FontAwesomeIcon
+                                                        icon={faCircleCheck}
+                                                        className="text-green-500"
+                                                    />
+                                                ) : (
+                                                    <FontAwesomeIcon
+                                                        icon={faBan}
+                                                        className="text-red-500"
+                                                    />
+                                                )}
+                                            </SecondaryButton>
+                                            <SecondaryButton
+                                                onClick={() =>
+                                                    handleEditcustomer(item)
+                                                }
+                                            >
                                                 <FontAwesomeIcon
-                                                    icon={faBan}
-                                                    className="text-red-500"
+                                                    icon={faEdit}
+                                                    className="text-yellow-500"
                                                 />
-                                            )}
-                                        </SecondaryButton>
-                                        <SecondaryButton
-                                            onClick={() =>
-                                                handleEditcustomer(item)
-                                            }
-                                        >
-                                            <FontAwesomeIcon
-                                                icon={faEdit}
-                                                className="text-yellow-500"
-                                            />
-                                        </SecondaryButton>
-                                        <SecondaryButton
-                                            onClick={() =>
-                                                handleDeletecustomer(item)
-                                            }
-                                        >
-                                            <FontAwesomeIcon
-                                                icon={faTrash}
-                                                className="text-red-600"
-                                            />
-                                        </SecondaryButton>
-                                    </Table.TdAction>
-                                </Table.Tr>
-                            ))}
+                                            </SecondaryButton>
+                                            <SecondaryButton
+                                                onClick={() =>
+                                                    handleDeletecustomer(item)
+                                                }
+                                            >
+                                                <FontAwesomeIcon
+                                                    icon={faTrash}
+                                                    className="text-red-600"
+                                                />
+                                            </SecondaryButton>
+                                        </Table.TdAction>
+                                    </Table.Tr>
+                                );
+                            })}
                         </Table>
                         {customers.data.length > 0 && (
                             <Pagination meta={customers.meta} noScroll={true} />
